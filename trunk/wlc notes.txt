@@ -1,0 +1,5 @@
+Comments toevoegen.
+Readme maken.
+Nil check van parameters toevoegen.
+Superadmin krijgt rechten van admin.
+Checks voor buttons, thrusters, etc toevoegen.
