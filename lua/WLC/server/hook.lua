@@ -15,8 +15,10 @@ hook.Add( "PlayerInitialSpawn", "wcPlayerInitialSpawn", hookPlayerInitialSpawn )
 
 function hookPlayerCanPickupWeapon( player, weapon )
 	if convarEnabled() then		
-		if wcValidateWeapon(player, weapon) == false then
-			weapon:Remove()
+		print(wcValidateWeapon(player, weapon))
+		if wcValidateWeapon(player, weapon) then
+			return true
+		else
 			return false
 		end
 	end

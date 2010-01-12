@@ -5,6 +5,22 @@
 ]]
 
 
+--- Checks the weapon restrictions of a group. Returns a string.
+function wcCheckWeapons( usergroup )
+	weaponsEntry = sqlSelectWeaponsEntry(usergroup)
+	if weaponsEntry != nil then
+		weaponsWhitelist = weaponsEntry[1]['whitelist']
+		if weaponsWhitelist then
+			listtype = "whitelisted"
+		else
+			listtype = "blacklisted"
+		end
+		return "Usergroup " .. usergroup .. " has the following weapons " .. listtype .. ": " .. weaponsEntry[1]['weapons'] .. "."
+	else
+		return "Usergroup doesn't have any weapon restrictions!"
+	end
+end
+
 --- Allows a group to have access to a set of weapons. Returns a string.
 function wcWhitelistWeapons( weapons, usergroup )
 	if sqlWriteWeaponsEntry(usergroup, weapons, true) then
@@ -23,12 +39,13 @@ function wcBlacklistWeapons( weapons, usergroup )
 	end
 end
 
+--- Removes all weapon restrictions of a group. Returns a string.
 function wcUnlistUsergroup( usergroup )
 	if sqlSelectWeaponsEntry(usergroup) != nil then
 		if sqlDeleteWeaponsEntry(usergroup) then
-			return true
+			return "Removed weapon restrictions for group " .. usergroup .. "."
 		else
-			return false
+			return "Unhandled error while unlisting usergroup!"
 		end
 	else
 		return false
@@ -47,13 +64,13 @@ function wcValidateWeapon( player, weapon )
 					weaponsWhitelist = weaponsEntry[1]['whitelist']
 					
 					if table.HasValue(weaponsList, weapon:GetClass()) then
-						if weaponsWhitelist then
+						if weaponsWhitelist == true then
 							return true
 						else
 							return false
 						end
 					else
-						if weaponsWhitelist then
+						if weaponsWhitelist == true then
 							return false
 						else
 							return true
