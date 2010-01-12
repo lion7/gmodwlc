@@ -16,9 +16,11 @@ function utilAdminCheck( player )
 				return true
 			end
 		end
+		
+		return false
+	else
+		return true
 	end
-	
-	return true
 end
 
 

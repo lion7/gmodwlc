@@ -5,7 +5,7 @@
 ]]
 
 
---- Gets called if an admin typed 'wlc' in the console. This executes the function 'concmdWlc'.
+--- Gets called if an admin typed 'wlc' in the console.
 function concmdWlc( player, command, args )
 	argsCount = table.Count(args)
 	
@@ -35,6 +35,17 @@ function concmdWlc( player, command, args )
 		-- elseif convarEnabled() == false then	
 		if convarEnabled() == false then	
 			result = "WLC is disabled!"
+		elseif subCommand == "check" then
+			if(argsCount == 1) then
+				result = "Please provide a group to check for weapon restrictions and limits!"
+			elseif(argsCount > 2) then
+				result = "Too much arguments!"
+			elseif(argsCount == 2) then	
+				result = wcCheckWeapons(args[2])
+				result = result .. "\n" .. lcCheckLimit(args[2])
+			else
+				result = "Unhandled error!"
+			end
 		elseif subCommand == "whitelist" then
 			if(argsCount == 1) then
 				result = "Please provide one or more weapons to whitelist!"
@@ -106,6 +117,10 @@ function concmdWlc( player, command, args )
 		end
 	end
 	
-	player:PrintMessage(HUD_PRINTCONSOLE, result)
+	if player:IsValid() then	
+		player:PrintMessage(HUD_PRINTCONSOLE, result)
+	else
+		print(result)
+	end
 end
 concommand.Add( "wlc", concmdWlc )
