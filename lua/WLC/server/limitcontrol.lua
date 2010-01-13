@@ -5,52 +5,63 @@
 ]]
 
 
---- Checks all limits of a group. Returns a string.
+--- Checks all limits of a group. Returns a string array.
 function lcCheckLimit( usergroup )
+	returnString = {}
+	
 	limitEntry = sqlSelectLimitEntry(usergroup)
 	if limitEntry != nil then
-		returnString = "Usergroup " .. usergroup .. " has the following limits:\n"
+		table.insert(returnString, "Usergroup " .. usergroup .. " has the following limits:")
 		for key, value in pairs( limitEntry ) do
-			returnString = returnString .. value['convar'] .. ": " .. value['maxlimit'] .. "\n"
+			table.insert(returnString, value['convar'] .. ": " .. value['maxlimit'])
 		end
-		return returnString
 	else
-		return "Usergroup " .. usergroup .. " doesn't have any limits.\n"
+		table.insert(returnString, "Usergroup " .. usergroup .. " doesn't have any limits.")
 	end
+	
+	return returnString
 end
 
---- Gives a group a different limit to a specific gmod limit. Returns a string.
+--- Gives a group a different limit to a specific gmod limit. Returns a string array.
 function lcSetLimit( usergroup, convar, limit )
+	returnString = {}
+	
 	if lcGmodLimitExists(convar) then
 		if sqlWriteLimitEntry(usergroup, convar, limit) then
-			return "Changed limit of gmod limit " .. convar .. " to " .. limit .. " on group " .. usergroup .. "."
+			table.insert(returnString, "Changed limit of gmod limit " .. convar .. " to " .. limit .. " on group " .. usergroup .. ".")
 		else		
-			return "Unhandled error while setting limit!"
+			table.insert(returnString, "Unhandled error while setting limit!")
 		end
 	else
-		return "Gmod limit " .. convar .. " doesn't exist!"
+		table.insert(returnString, "Gmod limit " .. convar .. " doesn't exist!")
 	end
+	
+	return returnString
 end
 
---- Removes a gmod limit from a group. Returns a string.
+--- Removes a gmod limit from a group. Returns a string array.
 function lcRemoveLimit( usergroup, convar )
+	returnString = {}
+	
 	if sqlSelectLimitEntry(usergroup, convar) != nil then
 		if sqlDeleteLimitEntry(usergroup, convar) then
 			if convar == nil then
-				return "Removed limit all limits from group " .. usergroup .. "."
+				table.insert(returnString, "Removed limit all limits from group " .. usergroup .. ".")
 			else
-				return "Removed limit " .. convar .. " from group " .. usergroup .. "."
+				table.insert(returnString, "Removed limit " .. convar .. " from group " .. usergroup .. ".")
 			end
 		else
-			if convar == nil then
-				return "Usergroup " .. usergroup .. " does not have any limits."
-			else				
-				return "Usergroup " .. usergroup .. " does not have limit " .. convar .. "."
-			end
+			table.insert(returnString, "Unhandled error while removing limit!")
 		end
 	else
-		return false
+		if convar == nil then
+			table.insert(returnString, "Usergroup " .. usergroup .. " does not have any limits.")
+		else				
+			table.insert(returnString, "Usergroup " .. usergroup .. " does not have limit " .. convar .. ".")
+		end
 	end
+	
+	return returnString
 end
 
 --- Validates if a gmod limit exists. Returns a boolean.
@@ -63,7 +74,7 @@ function lcGmodLimitExists( convar )
 	end
 end
 
---- Validates if the specified prop is allowed to spawn by the player.
+--- Validates if the specified prop is allowed to spawn by the player. Returns a boolean.
 function lcValidateLimit( player, convar )
 	if player:IsValid() then		
 		entityType = string.sub(convar, 9)
