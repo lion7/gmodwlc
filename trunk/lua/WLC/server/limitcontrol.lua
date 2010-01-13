@@ -9,51 +9,63 @@
 function lcCheckLimit( usergroup )
 	limitEntry = sqlSelectLimitEntry(usergroup)
 	if limitEntry != nil then
-		returnString = "Usergroup " .. usergroup .. " has the following limits: "
+		returnString = "Usergroup " .. usergroup .. " has the following limits:\n"
 		for key, value in pairs( limitEntry ) do
-			returnString = returnString .. value['maxlimit'] .. "x " .. value['convar'] .. ", "
+			returnString = returnString .. value['convar'] .. ": " .. value['maxlimit'] .. "\n"
 		end
-		returnString = string.sub(returnString, 0, string.len(returnString)-2)
 		return returnString
 	else
-		return "Usergroup " .. usergroup .. " doesn't have any limits."
+		return "Usergroup " .. usergroup .. " doesn't have any limits.\n"
 	end
 end
 
 --- Gives a group a different limit to a specific gmod limit. Returns a string.
-function lcSetLimit( convar, limit, usergroup )
-	-- if lcGmodLimitExists(convar) then
+function lcSetLimit( usergroup, convar, limit )
+	if lcGmodLimitExists(convar) then
 		if sqlWriteLimitEntry(usergroup, convar, limit) then
 			return "Changed limit of gmod limit " .. convar .. " to " .. limit .. " on group " .. usergroup .. "."
 		else		
 			return "Unhandled error while setting limit!"
 		end
-	-- else
-		-- return "Invalid gmod limit while setting limit!"
-	-- end
+	else
+		return "Gmod limit " .. convar .. " doesn't exist!"
+	end
 end
 
 --- Removes a gmod limit from a group. Returns a string.
-function lcRemoveLimit( convar, usergroup )
+function lcRemoveLimit( usergroup, convar )
 	if sqlSelectLimitEntry(usergroup, convar) != nil then
 		if sqlDeleteLimitEntry(usergroup, convar) then
-			return "Removed limit " .. convar .. " from group " .. usergroup .. "."
+			if convar == nil then
+				return "Removed limit all limits from group " .. usergroup .. "."
+			else
+				return "Removed limit " .. convar .. " from group " .. usergroup .. "."
+			end
 		else
-			return "Usergroup " .. usergroup .. " does not have limit " .. convar .. "."
+			if convar == nil then
+				return "Usergroup " .. usergroup .. " does not have any limits."
+			else				
+				return "Usergroup " .. usergroup .. " does not have limit " .. convar .. "."
+			end
 		end
 	else
 		return false
 	end
 end
 
--- --- Validates if a gmod limit exists. Returns a boolean.
--- function lcGmodLimitExists( convar )
-	-- return true
--- end
+--- Validates if a gmod limit exists. Returns a boolean.
+function lcGmodLimitExists( convar )
+	convarValue = GetConVar(convar)
+	if convarValue == nil then
+		return false
+	else
+		return true
+	end
+end
 
 --- Validates if the specified prop is allowed to spawn by the player.
 function lcValidateLimit( player, convar )
-	if player:IsValid() then	
+	if player:IsValid() then		
 		entityType = string.sub(convar, 9)
 		usergroups = sqlSelectLimitUsergroups()
 		if usergroups != nil then
