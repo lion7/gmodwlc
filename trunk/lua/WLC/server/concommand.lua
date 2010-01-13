@@ -8,130 +8,118 @@
 --- Gets called if an admin typed 'wlc' in the console.
 function concmdWlc( player, command, args )
 	argsCount = table.Count(args)
+	result = {}
 	
 	if utilAdminCheck(player) == false then
-		result = "You are not allowed to access this command!"
+		table.insert(result, "You are not allowed to access this command!")
 	elseif argsCount < 1 then	
-		result = "Please provide a subcommand!"
+		table.insert(result, "Please provide a subcommand!")
 	else		
 		subCommand = args[1]
 		
-		-- if subCommand == "enable" then
-			-- if(argsCount > 1) then
-				-- result = "Too much arguments!"
-			-- elseif(argsCount == 1) then
-				-- result = utilSetEnabled(true)			
-			-- else
-				-- result = "Unhandled error!"
-			-- end
-		-- elseif subCommand == "disable" then
-			-- if(argsCount > 1) then
-				-- result = "Too much arguments!"
-			-- elseif(argsCount == 1) then
-				-- result = utilSetEnabled(false)			
-			-- else
-				-- result = "Unhandled error!"
-			-- end
-		-- elseif convarEnabled() == false then	
 		if convarEnabled() == false then	
-			result = "WLC is disabled!"
+			table.insert(result, "WLC is disabled!")
 		elseif subCommand == "help" then
 			if(argsCount == 1) then
-				result = utilHelp(nil)
+				utilJoinTables(result, utilHelp(nil))
 			elseif(argsCount > 2) then
-				result = "Too much arguments!"
+				table.insert(result, "Too much arguments!")
 			elseif(argsCount == 2) then	
-				result = utilHelp(args[2])
+				utilJoinTables(result, utilHelp(args[2]))
 			else
-				result = "Unhandled error!"
+				table.insert(result, "Unhandled error!")
 			end
 		elseif subCommand == "check" then
 			if(argsCount == 1) then
-				result = "Please provide a group to check for weapon restrictions and limits!"
+				table.insert(result, "Please provide a group to check for weapon restrictions and limits!")
 			elseif(argsCount > 2) then
-				result = "Too much arguments!"
+				table.insert(result, "Too much arguments!")
 			elseif(argsCount == 2) then	
-				result = wcCheckWeapons(args[2])
-				result = result .. "\n" .. lcCheckLimit(args[2])
+				utilJoinTables(result, wcCheckWeapons(args[2]))
+				utilJoinTables(result, lcCheckLimit(args[2]))
 			else
-				result = "Unhandled error!"
+				table.insert(result, "Unhandled error!")
 			end
 		elseif subCommand == "blacklist" then
 			if(argsCount == 1) then
-				result = "Please provide a group to blacklist the weapons!"
+				table.insert(result, "Please provide a group to blacklist the weapons!")
 			elseif(argsCount == 2) then
-				result = "Please provide one or more weapons to blacklist!"
+				table.insert(result, "Please provide one or more weapons to blacklist!")
 			elseif(argsCount > 3) then
-				result = "Too much arguments!"
+				table.insert(result, "Too much arguments!")
 			elseif(argsCount == 3) then	
-				result = wcBlacklistWeapons(args[2], args[3])
+				utilJoinTables(result, wcBlacklistWeapons(args[2], args[3]))
 			else
-				result = "Unhandled error!"
+				table.insert(result, "Unhandled error!")
 			end
 		elseif subCommand == "whitelist" then
 			if(argsCount == 1) then
-				result = "Please provide a group to whitelist the weapons!"
+				table.insert(result, "Please provide a group to whitelist the weapons!")
 			elseif(argsCount == 2) then
-				result = "Please provide one or more weapons to whitelist!"
+				table.insert(result, "Please provide one or more weapons to whitelist!")
 			elseif(argsCount > 3) then
-				result = "Too much arguments!"
+				table.insert(result, "Too much arguments!")
 			elseif(argsCount == 3) then	
-				result = wcWhitelistWeapons(args[2], args[3])
+				utilJoinTables(result, wcWhitelistWeapons(args[2], args[3]))
 			else
-				result = "Unhandled error!"
+				table.insert(result, "Unhandled error!")
 			end
 		elseif subCommand == "unlist" then					
 			if(argsCount == 1) then
-				result = "Please provide a group to remove any weapon restrictions!"
+				table.insert(result, "Please provide a group to remove any weapon restrictions!")
 			elseif(argsCount > 2) then
-				result = "Too much arguments!"
+				table.insert(result, "Too much arguments!")
 			elseif(argsCount == 2) then	
-				result = wcUnlistUsergroup(args[2])
+				utilJoinTables(result, wcUnlistUsergroup(args[2]))
 			else
-				result = "Unhandled error!"
+				table.insert(result, "Unhandled error!")
 			end
 		elseif subCommand == "setlimit" then			
 			if(argsCount == 1) then
-				result = "Please provide a group to change the gmod limit!"
+				table.insert(result, "Please provide a group to change the gmod limit!")
 			elseif(argsCount == 2) then
-				result = "Please provide an existing gmod limit to specify a different limit!"
+				table.insert(result, "Please provide an existing gmod limit to specify a different limit!")
 			elseif(argsCount == 3) then
-				result = "Please provide a different limit for the gmod limit!"
+				table.insert(result, "Please provide a different limit for the gmod limit!")
 			elseif(argsCount > 4) then
-				result = "Too much arguments!"
+				table.insert(result, "Too much arguments!")
 			elseif(argsCount == 4) then	
-				result = lcSetLimit(args[2], args[3], args[4])
+				utilJoinTables(result, lcSetLimit(args[2], args[3], args[4]))
 			else
-				result = "Unhandled error!"
+				table.insert(result, "Unhandled error!")
 			end
 		elseif subCommand == "removelimit" then
 			if(argsCount == 1) then
-				result = "Please provide a group to remove all limits, or an group and existing gmod limit to remove that limit!"
+				table.insert(result, "Please provide a group to remove all limits, or an group and existing gmod limit to remove that limit!")
 			elseif(argsCount == 2) then
-				result = lcRemoveLimit(args[2])
+				utilJoinTables(result, lcRemoveLimit(args[2]))
 			elseif(argsCount == 3) then
-				result = lcRemoveLimit(args[2], args[3])
+				utilJoinTables(result, lcRemoveLimit(args[2], args[3]))
 			elseif(argsCount > 3) then
-				result = "Too much arguments!"
+				table.insert(result, "Too much arguments!")
 			else
-				result = "Unhandled error!"
+				table.insert(result, "Unhandled error!")
 			end
 		elseif subCommand == "cleardb" then
 			if(argsCount == 1) then
-				result = result .. sqlRemoveTables()
-				result = result .. sqlValidateTables()				
+				utilJoinTables(result, sqlRemoveTables())
+				utilJoinTables(result, sqlValidateTables())
 			else
-				result = "Unhandled error!"
+				table.insert(result, "Unhandled error!")
 			end
 		else
-			result = "Invalid subcommand!"
+			table.insert(result, "Invalid subcommand!")
 		end
 	end
 	
-	if player:IsValid() then	
-		player:PrintMessage(HUD_PRINTCONSOLE, result)
+	if player:IsValid() then
+		for key, value in pairs( result ) do
+			player:PrintMessage(HUD_PRINTCONSOLE, value)
+		end
 	else
-		print(result)
+		for key, value in pairs( result ) do
+			print(value)
+		end
 	end
 end
 concommand.Add( "wlc", concmdWlc )

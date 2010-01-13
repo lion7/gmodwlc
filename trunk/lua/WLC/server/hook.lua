@@ -13,6 +13,7 @@ end
 hook.Add( "PlayerInitialSpawn", "wcPlayerInitialSpawn", hookPlayerInitialSpawn )
 
 
+--- Returns a boolean.
 function hookPlayerCanPickupWeapon( player, weapon )
 	if convarEnabled() then
 		if wcValidateWeapon(player, weapon) then

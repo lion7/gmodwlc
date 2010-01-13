@@ -4,85 +4,89 @@
 	Holds helpful SQL functions.
 ]]
 
-
+--- Returns a string array.
 function sqlValidateTables()
-	result = ""
+	returnString = {}
 
-	if (!sql.TableExists("wlc_weapons")) then
+	if !sql.TableExists("wlc_weapons") then
 		query = "CREATE TABLE wlc_weapons( usergroup VARCHAR(255) NOT NULL, weapons VARCHAR(255) NOT NULL, whitelist BOOLEAN NOT NULL, PRIMARY KEY(usergroup) );"
 		createResult = sql.Query(query)
-		if (sql.TableExists("wlc_weapons")) then
-			result = result .. "--  Table wlc_weapons created--\n"
+		if sql.TableExists("wlc_weapons") then
+			table.insert(returnString, "--  Table wlc_weapons created    --")
 		else
-			result = result .. "Something went wrong with creating the wlc_weapons table!\n"
-			result = result ..  sql.LastError( result ) .. "\n" 
+			table.insert(returnString, "Something went wrong with creating the wlc_weapons table!")
+			table.insert(returnString, sql.LastError( createResult ))
 		end	
 	else
-		result = result .. "--  Table wlc_weapons exists --\n"
+		table.insert(returnString, "--  Table wlc_weapons exists     --")
 	end
 	
-	if (!sql.TableExists("wlc_limits")) then
+	if !sql.TableExists("wlc_limits") then
 		query = "CREATE TABLE wlc_limits( usergroup VARCHAR(255) NOT NULL, convar VARCHAR(255) NOT NULL, maxlimit INT NOT NULL, PRIMARY KEY(usergroup, convar) );"
 		createResult = sql.Query(query)
-		if (sql.TableExists("wlc_limits")) then
-			result = result .. "--  Table wlc_limits created --\n"
+		if sql.TableExists("wlc_limits") then
+			table.insert(returnString, "--  Table wlc_limits created     --")
 		else
-			result = result .. "Something went wrong with creating the wlc_limits table!\n"
-			result = result ..  sql.LastError( result ) .. "\n" 
+			table.insert(returnString, "Something went wrong with creating the wlc_limits table!")
+			table.insert(returnString, sql.LastError( createResult ))
 		end	
-	else				    
-		result = result .. "--  Table wlc_limits exists  --\n"
-	end 
+	else
+		table.insert(returnString, "--  Table wlc_limits exists      --")
+	end
 	
-	return result
+	return returnString
 end
 
+--- Returns a string array.
 function sqlRemoveTables()
-	result = ""
+	returnString = {}
 
 	if sql.TableExists("wlc_weapons") then
 		query = "DROP TABLE wlc_weapons;"
-		createResult = sql.Query(query)
-		if (!sql.TableExists("wlc_weapons")) then
-			result = result .. "--  Table wlc_weapons deleted--\n"
+		deleteResult = sql.Query(query)
+		if !sql.TableExists("wlc_weapons") then
+			table.insert(returnString, "--  Table wlc_weapons deleted     --")
 		else
-			result = result .. "Something went wrong when deleting the wlc_weapons table!\n"
-			result = result ..  sql.LastError( result ) .. "\n" 
+			table.insert(returnString, "Something went wrong when deleting the wlc_weapons table!")
+			table.insert(returnString, sql.LastError( deleteResult ))
 		end	
 	else
-		result = result .. "--  Table wlc_weapons doesn't exist --\n"
+		table.insert(returnString, "--Table wlc_weapons doesn't exist--")
 	end
 	
 	if sql.TableExists("wlc_limits") then
 		query = "DROP TABLE wlc_limits;"
-		createResult = sql.Query(query)
-		if (!sql.TableExists("wlc_limits")) then
-			result = result .. "--  Table wlc_limits deleted  --\n"
+		deleteResult = sql.Query(query)
+		if !sql.TableExists("wlc_limits") then
+			table.insert(returnString, "--  Table wlc_limits deleted     --")
 		else
-			result = result .. "Something went wrong when deleting the wlc_limits table!\n"
-			result = result ..  sql.LastError( result ) .. "\n" 
+			table.insert(returnString, "Something went wrong when deleting the wlc_limits table!")
+			table.insert(returnString, sql.LastError( deleteResult ))
 		end	
 	else				    
-		result = result .. "--  Table wlc_limits doesn't exist  --\n"
+		table.insert(returnString, "--Table wlc_limits doesn't exist --")
 	end 
 	
-	return result
+	return returnString
 end
 
 
 
+--- Returns a sql result.
 function sqlSelectWeaponsUsergroups()		
 	query = "SELECT usergroup FROM wlc_weapons ORDER BY usergroup DESC;"
 	result = sql.Query(query)	
 	return result
 end
 
+--- Returns a sql result.
 function sqlSelectWeaponsEntry(usergroup)		
 	query = "SELECT * FROM wlc_weapons WHERE usergroup = '" .. usergroup .. "';"
 	result = sql.Query(query)	
 	return result
 end
 
+--- Returns a boolean.
 function sqlWriteWeaponsEntry(usergroup, weapons, whitelist)	
 	if sqlSelectWeaponsEntry(usergroup) == nil then	
 		query = "INSERT INTO wlc_weapons( usergroup, weapons, whitelist ) VALUES ( '" .. usergroup .. "', '" .. weapons .. "', '" .. tostring(whitelist) .. "' );"
@@ -104,6 +108,7 @@ function sqlWriteWeaponsEntry(usergroup, weapons, whitelist)
 	end
 end
 
+--- Returns a boolean.
 function sqlDeleteWeaponsEntry(usergroup)	
 	query = "DELETE FROM wlc_weapons WHERE usergroup = '" .. usergroup .. "';"
 	sql.Query(query)
@@ -116,12 +121,14 @@ end
 
 
 
+--- Returns a sql result.
 function sqlSelectLimitUsergroups()		
 	query = "SELECT usergroup FROM wlc_limits ORDER BY usergroup DESC;"
 	result = sql.Query(query)	
 	return result
 end
 
+--- Returns a sql result.
 function sqlSelectLimitEntry(usergroup, convar)
 	if convar == nil then
 		query = "SELECT * FROM wlc_limits WHERE usergroup = '" .. usergroup .. "';"
@@ -132,6 +139,7 @@ function sqlSelectLimitEntry(usergroup, convar)
 	return result
 end
 
+--- Returns a boolean.
 function sqlWriteLimitEntry(usergroup, convar, maxlimit)
 	if sqlSelectLimitEntry(usergroup, convar) == nil then
 		query = "INSERT INTO wlc_limits( usergroup, convar, maxlimit ) VALUES ( '" .. usergroup .. "', '" .. convar .. "', '" .. tostring(maxlimit) .. "' );"
@@ -153,6 +161,7 @@ function sqlWriteLimitEntry(usergroup, convar, maxlimit)
 	end
 end
 
+--- Returns a boolean.
 function sqlDeleteLimitEntry(usergroup, convar)
 	if convar == nil then
 		query = "DELETE FROM wlc_limits WHERE usergroup = '" .. usergroup .. "';"

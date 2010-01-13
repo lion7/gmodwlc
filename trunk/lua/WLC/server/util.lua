@@ -5,9 +5,6 @@
 ]]
 
 
--- local wlc_enabled = true
-
-
 --- Checks if the player has access to this script. Returns a boolean.
 function utilAdminCheck( player )
 	if player:IsValid() then	
@@ -23,89 +20,73 @@ function utilAdminCheck( player )
 	end
 end
 
---- Returns help about all commands or a specific command. Returns a string.
+--- Returns help about all commands or a specific command. Returns a string array.
 function utilHelp( command )
+	returnString = {}
+		
 	if command == nil then
-		returnString = "Commands:\n"
-		returnString = returnString .. "wlc help [command]\n"
-		returnString = returnString .. "\tExample: wlc help check\n"
-		returnString = returnString .. "\tDescription: Shows a description and examples about the provided command, or all commands if none provided.\n"
-		returnString = returnString .. "\n"
+		table.insert(returnString, "Available commands:")
+		table.insert(returnString, "")
+		table.insert(returnString, "wlc help [command]")
+		table.insert(returnString, "\tExample: wlc help check")
+		table.insert(returnString, "\tDescription: Shows a description and examples about the provided command, or all commands if none provided.")
+		table.insert(returnString, "")
 		
-		returnString = returnString .. "wlc check group\n"
-		returnString = returnString .. "\tExample: wlc check superadmin\n" 
-		returnString = returnString .. "\tDescription: Shows the restrictions and limits active on the group.\n"
-		returnString = returnString .. "\n"
+		table.insert(returnString, "wlc check group")
+		table.insert(returnString, "\tExample: wlc check superadmin")
+		table.insert(returnString, "\tDescription: Shows the restrictions and limits active on the group.")
+		table.insert(returnString, "")
 		
-		returnString = returnString .. "wlc blacklist group weapons\n"
-		returnString = returnString .. "\tExample: wlc blacklist admin weapon_rpg,weapon_frag\n" 
-		returnString = returnString .. "\tDescription: Prevents an group from spawning the provided weapons.\n"
-		returnString = returnString .. "\n"
+		table.insert(returnString, "wlc blacklist group weapons")
+		table.insert(returnString, "\tExample: wlc blacklist admin weapon_rpg,weapon_frag")
+		table.insert(returnString, "\tDescription: Prevents an group from spawning the provided weapons.")
+		table.insert(returnString, "")
 		
-		returnString = returnString .. "wlc whitelist group weapons\n"
-		returnString = returnString .. "\tExample: wlc whitelist user weapon_psyscannon,gmod_camera\n" 
-		returnString = returnString .. "\tDescription: Allows an group to spawn only the provided weapons.\n"
-		returnString = returnString .. "\n"
+		table.insert(returnString, "wlc whitelist group weapons")
+		table.insert(returnString, "\tExample: wlc whitelist user weapon_psyscannon,gmod_camera") 
+		table.insert(returnString, "\tDescription: Allows an group to spawn only the provided weapons.")
+		table.insert(returnString, "")
 		
-		returnString = returnString .. "wlc unlist group\n"
-		returnString = returnString .. "\tExample: wlc unlist moderator\n"
-		returnString = returnString .. "\tDescription: Removes all weapon restrictions.\n"
-		returnString = returnString .. "\n"
+		table.insert(returnString, "wlc unlist group")
+		table.insert(returnString, "\tExample: wlc unlist moderator")
+		table.insert(returnString, "\tDescription: Removes all weapon restrictions.")
+		table.insert(returnString, "")
 		
-		returnString = returnString .. "wlc setlimit group convar newlimit\n"
-		returnString = returnString .. "\tExample: wlc setlimit admin sbox_maxnpcs 10\n" 
-		returnString = returnString .. "\tDescription: Sets an new limit for the provided convar. Use -1 for unlimited.\n"
-		returnString = returnString .. "\n"
+		table.insert(returnString, "wlc setlimit group convar newlimit")
+		table.insert(returnString, "\tExample: wlc setlimit admin sbox_maxnpcs 10")
+		table.insert(returnString, "\tDescription: Sets an new limit for the provided convar. Use -1 for unlimited.")
+		table.insert(returnString, "")
 		
-		returnString = returnString .. "wlc removelimit group [convar]\n"
-		returnString = returnString .. "\tExample: wlc removelimit admin sbox_maxnpcs\n" 
-		returnString = returnString .. "\tDescription: Removes the limit set for the provided convar, or all limits if no convar specified.\n"
+		table.insert(returnString, "wlc removelimit group [convar]")
+		table.insert(returnString, "\tExample: wlc removelimit admin sbox_maxnpcs")
+		table.insert(returnString, "\tDescription: Removes the limit set for the provided convar, or all limits if no convar specified.")
 	else
 		if command == "help" then
-			returnString = "No help available yet."
+			table.insert(returnString, "No help available yet.")
 		elseif command == "check" then
-			returnString = "No help available yet."
+			table.insert(returnString, "No help available yet.")
 		elseif command == "blacklist" then
-			returnString = "No help available yet."
+			table.insert(returnString, "No help available yet.")
 		elseif command == "whitelist" then
-			returnString = "No help available yet."
+			table.insert(returnString, "No help available yet.")
 		elseif command == "unlist" then
-			returnString = "No help available yet."
+			table.insert(returnString, "No help available yet.")
 		elseif command == "setlimit" then
-			returnString = "No help available yet."
+			table.insert(returnString, "No help available yet.")
 		elseif command == "removelimit" then
-			returnString = "No help available yet."
+			table.insert(returnString, "No help available yet.")
 		else
-			returnString = "Invalid command!\n"
-			returnString = returnString .. "Type wlc help to see a list of all available commands.\n"
+			table.insert(returnString, "Invalid command!")
+			table.insert(returnString, "Type wlc help to see a list of all available commands.")
 		end
 	end
-	
+		
 	return returnString
 end
 
-
--- --- Checks if the script is enabled/disabled. Returns a boolean.
--- function utilIsEnabled() 
-	-- return wlc_enabled
--- end
-
-
--- --- Enables/disables the script. Returns a string.
--- function utilSetEnabled( bool ) 
-	-- if bool then
-		-- if wlc_enabled == false then
-			-- wlc_enabled = true
-			-- return "WLC is now enabled."
-		-- else		
-			-- return "WLC is already enabled."
-		-- end
-	-- elseif bool == false then
-		-- if wlc_enabled then
-			-- wlc_enabled = false
-			-- return "WLC is now disabled."
-		-- else		
-			-- return "WLC is already disabled."
-		-- end
-	-- end
--- end
+function utilJoinTables(t1, t2)  
+    for k,v in ipairs(t2) do 
+		table.insert(t1, v) 
+	end 
+	return t1  
+end 

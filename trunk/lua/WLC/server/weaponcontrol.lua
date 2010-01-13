@@ -5,8 +5,10 @@
 ]]
 
 
---- Checks the weapon restrictions of a group. Returns a string.
+--- Checks the weapon restrictions of a group. Returns a string array.
 function wcCheckWeapons( usergroup )
+	returnString = {}
+
 	weaponsEntry = sqlSelectWeaponsEntry(usergroup)
 	if weaponsEntry != nil then
 		weaponsWhitelist = weaponsEntry[1]['whitelist']
@@ -15,52 +17,73 @@ function wcCheckWeapons( usergroup )
 		else
 			listtype = "blacklisted"
 		end
-		returnString = "Usergroup " .. usergroup .. " has the following weapons " .. listtype .. ":\n"
+		table.insert(returnString, "Usergroup " .. usergroup .. " has the following weapons " .. listtype .. ":")
 		weaponsList = string.Explode( ",", weaponsEntry[1]['weapons'] )
 		for key, value in pairs( weaponsList ) do
-			returnString = returnString .. value .. "\n"
+			table.insert(returnString, value)
 		end
-		return returnString
 	else
-		return "Usergroup doesn't have any weapon restrictions!\n"
+		table.insert(returnString, "Usergroup " .. usergroup .. " doesn't have any weapon restrictions!")
 	end
+	
+	return returnString
 end
 
---- Allows a group to have access to a set of weapons. Returns a string.
+--- Allows a group to have access to a set of weapons. Returns a string array.
 function wcWhitelistWeapons( usergroup, weapons )
+	returnString = {}
+	
 	weaponsList = string.Explode( ",", weapons )
 	for key, value in pairs( weaponsList ) do
 		if wcWeaponExists(value) == false then
-			return "Weapon " .. value .. " doesn't exist!"
+			table.insert(returnString, "Weapon " .. value .. " doesn't exist!")
+			return returnString
 		end
 	end
 	if sqlWriteWeaponsEntry(usergroup, weapons, true) then
-		return "Whitelisted weapon(s) " .. weapons .. " for group " .. usergroup .. "."
+		table.insert(returnString, "Whitelisted weapon(s) " .. weapons .. " for group " .. usergroup .. ".")
 	else
-		return "Unhandled error while whitelisting weapon(s)!"
+		table.insert(returnString, "Unhandled error while whitelisting weapon(s)!")
 	end
+	
+	return returnString
 end
 
---- Denies a group to have access to a set of weapons. Returns a string.
-function wcBlacklistWeapons( usergroup, weapons ) 
+--- Denies a group to have access to a set of weapons. Returns a string array.
+function wcBlacklistWeapons( usergroup, weapons )
+	returnString = {}
+	
+	weaponsList = string.Explode( ",", weapons )
+	for key, value in pairs( weaponsList ) do
+		if wcWeaponExists(value) == false then
+			table.insert(returnString, "Weapon " .. value .. " doesn't exist!")
+			return returnString
+		end
+	end
 	if sqlWriteWeaponsEntry(usergroup, weapons, false) then
-		return "Blacklisted weapon(s) " .. weapons .. " for group " .. usergroup .. "."
+		table.insert(returnString, "Blacklisted weapon(s) " .. weapons .. " for group " .. usergroup .. ".")
 	else
-		return "Unhandled error while blacklisting weapon(s)!"
+		table.insert(returnString, "Unhandled error while blacklisting weapon(s)!")
 	end
+	
+	return returnString
 end
 
---- Removes all weapon restrictions of a group. Returns a string.
+--- Removes all weapon restrictions of a group. Returns a string array.
 function wcUnlistUsergroup( usergroup )
+	returnString = {}
+	
 	if sqlSelectWeaponsEntry(usergroup) != nil then
 		if sqlDeleteWeaponsEntry(usergroup) then
-			return "Removed weapon restrictions for group " .. usergroup .. "."
+			table.insert(returnString, "Removed weapon restrictions for group " .. usergroup .. ".")
 		else
-			return "Unhandled error while unlisting usergroup!"
+			table.insert(returnString, "Unhandled error while unlisting usergroup!")
 		end
 	else
-		return false
+		table.insert(returnString, "Usergroup " .. usergroup .. " doesn't have any weapon restrictions!")
 	end
+	
+	return returnString
 end
 
 --- Validates if a weapon exists. Returns a boolean.
@@ -72,7 +95,7 @@ function wcWeaponExists( weapon )
 	end 
 end
 
---- Validates if the specified weapon is allowed for the player's usergroup.
+--- Validates if the specified weapon is allowed for the player's usergroup. Returns a boolean.
 function wcValidateWeapon( player, weapon )
 	if player:IsValid() then	
 		usergroups = sqlSelectWeaponsUsergroups()
