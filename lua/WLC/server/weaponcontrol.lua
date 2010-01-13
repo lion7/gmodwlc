@@ -15,14 +15,25 @@ function wcCheckWeapons( usergroup )
 		else
 			listtype = "blacklisted"
 		end
-		return "Usergroup " .. usergroup .. " has the following weapons " .. listtype .. ": " .. weaponsEntry[1]['weapons'] .. "."
+		returnString = "Usergroup " .. usergroup .. " has the following weapons " .. listtype .. ":\n"
+		weaponsList = string.Explode( ",", weaponsEntry[1]['weapons'] )
+		for key, value in pairs( weaponsList ) do
+			returnString = returnString .. value .. "\n"
+		end
+		return returnString
 	else
-		return "Usergroup doesn't have any weapon restrictions!"
+		return "Usergroup doesn't have any weapon restrictions!\n"
 	end
 end
 
 --- Allows a group to have access to a set of weapons. Returns a string.
-function wcWhitelistWeapons( weapons, usergroup )
+function wcWhitelistWeapons( usergroup, weapons )
+	weaponsList = string.Explode( ",", weapons )
+	for key, value in pairs( weaponsList ) do
+		if wcWeaponExists(value) == false then
+			return "Weapon " .. value .. " doesn't exist!"
+		end
+	end
 	if sqlWriteWeaponsEntry(usergroup, weapons, true) then
 		return "Whitelisted weapon(s) " .. weapons .. " for group " .. usergroup .. "."
 	else
@@ -31,7 +42,7 @@ function wcWhitelistWeapons( weapons, usergroup )
 end
 
 --- Denies a group to have access to a set of weapons. Returns a string.
-function wcBlacklistWeapons( weapons, usergroup ) 
+function wcBlacklistWeapons( usergroup, weapons ) 
 	if sqlWriteWeaponsEntry(usergroup, weapons, false) then
 		return "Blacklisted weapon(s) " .. weapons .. " for group " .. usergroup .. "."
 	else
@@ -50,6 +61,15 @@ function wcUnlistUsergroup( usergroup )
 	else
 		return false
 	end
+end
+
+--- Validates if a weapon exists. Returns a boolean.
+function wcWeaponExists( weapon )
+	if table.HasValue(weapons.GetList(), weapon) then
+		return true
+	else
+		return false
+	end 
 end
 
 --- Validates if the specified weapon is allowed for the player's usergroup.

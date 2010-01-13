@@ -37,6 +37,39 @@ function sqlValidateTables()
 	return result
 end
 
+function sqlRemoveTables()
+	result = ""
+
+	if sql.TableExists("wlc_weapons") then
+		query = "DROP TABLE wlc_weapons;"
+		createResult = sql.Query(query)
+		if (!sql.TableExists("wlc_weapons")) then
+			result = result .. "--  Table wlc_weapons deleted--\n"
+		else
+			result = result .. "Something went wrong when deleting the wlc_weapons table!\n"
+			result = result ..  sql.LastError( result ) .. "\n" 
+		end	
+	else
+		result = result .. "--  Table wlc_weapons doesn't exist --\n"
+	end
+	
+	if sql.TableExists("wlc_limits") then
+		query = "DROP TABLE wlc_limits;"
+		createResult = sql.Query(query)
+		if (!sql.TableExists("wlc_limits")) then
+			result = result .. "--  Table wlc_limits deleted  --\n"
+		else
+			result = result .. "Something went wrong when deleting the wlc_limits table!\n"
+			result = result ..  sql.LastError( result ) .. "\n" 
+		end	
+	else				    
+		result = result .. "--  Table wlc_limits doesn't exist  --\n"
+	end 
+	
+	return result
+end
+
+
 
 function sqlSelectWeaponsUsergroups()		
 	query = "SELECT usergroup FROM wlc_weapons ORDER BY usergroup DESC;"
