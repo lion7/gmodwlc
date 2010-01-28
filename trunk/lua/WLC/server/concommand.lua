@@ -35,8 +35,12 @@ function concmdWlc( player, command, args )
 			elseif(argsCount > 2) then
 				table.insert(result, "Too much arguments!")
 			elseif(argsCount == 2) then	
-				utilJoinTables(result, wcCheckWeapons(args[2]))
-				utilJoinTables(result, lcCheckLimit(args[2]))
+				if utilUsergroupExists(args[2]) then
+					utilJoinTables(result, wcCheckWeapons(args[2]))
+					utilJoinTables(result, lcCheckLimit(args[2]))
+				else
+					table.insert(result, "Usergroup " .. args[2] .. " doesn't exist!")
+				end
 			else
 				table.insert(result, "Unhandled error!")
 			end
@@ -113,12 +117,20 @@ function concmdWlc( player, command, args )
 	end
 	
 	if player:IsValid() then
-		for key, value in pairs( result ) do
-			player:PrintMessage(HUD_PRINTCONSOLE, value)
+		if result == nil then
+			player:PrintMessage(HUD_PRINTCONSOLE, "No output returned.")
+		else
+			for key, value in pairs( result ) do
+				player:PrintMessage(HUD_PRINTCONSOLE, value)
+			end
 		end
 	else
-		for key, value in pairs( result ) do
-			print(value)
+		if result == nil then
+			print("No output returned.")
+		else
+			for key, value in pairs( result ) do
+				print(value)
+			end
 		end
 	end
 end
