@@ -33,6 +33,11 @@ end
 function wcWhitelistWeapons( usergroup, weapons )
 	returnString = {}
 	
+	if utilUsergroupExists(usergroup) == false then
+		table.insert(returnString, "Usergroup " .. usergroup .. " doesn't exist!")
+		return returnString
+	end
+	
 	weaponsList = string.Explode( ",", weapons )
 	for key, value in pairs( weaponsList ) do
 		if wcWeaponExists(value) == false then
@@ -40,6 +45,7 @@ function wcWhitelistWeapons( usergroup, weapons )
 			return returnString
 		end
 	end
+	
 	if sqlWriteWeaponsEntry(usergroup, weapons, true) then
 		table.insert(returnString, "Whitelisted weapon(s) " .. weapons .. " for group " .. usergroup .. ".")
 	else
@@ -53,6 +59,11 @@ end
 function wcBlacklistWeapons( usergroup, weapons )
 	returnString = {}
 	
+	if utilUsergroupExists(usergroup) == false then
+		table.insert(returnString, "Usergroup " .. usergroup .. " doesn't exist!")
+		return returnString
+	end
+	
 	weaponsList = string.Explode( ",", weapons )
 	for key, value in pairs( weaponsList ) do
 		if wcWeaponExists(value) == false then
@@ -60,6 +71,7 @@ function wcBlacklistWeapons( usergroup, weapons )
 			return returnString
 		end
 	end
+	
 	if sqlWriteWeaponsEntry(usergroup, weapons, false) then
 		table.insert(returnString, "Blacklisted weapon(s) " .. weapons .. " for group " .. usergroup .. ".")
 	else
@@ -87,12 +99,13 @@ function wcUnlistUsergroup( usergroup )
 end
 
 --- Validates if a weapon exists. Returns a boolean.
-function wcWeaponExists( weapon )
-	if table.HasValue(weapons.GetList(), weapon) then
-		return true
-	else
-		return false
-	end 
+function wcWeaponExists( weaponclass )
+	return true
+	-- if table.HasValue(weapons.GetList(), weaponclass) then
+		-- return true
+	-- else
+		-- return false
+	-- end 
 end
 
 --- Validates if the specified weapon is allowed for the player's usergroup. Returns a boolean.
@@ -101,7 +114,7 @@ function wcValidateWeapon( player, weapon )
 		usergroups = sqlSelectWeaponsUsergroups()
 		if usergroups != nil then
 			for key, value in pairs( usergroups ) do
-				if player:IsUserGroup(value['usergroup']) then 
+				if team.GetName(player:Team()) == value['usergroup'] then 
 					weaponsEntry = sqlSelectWeaponsEntry(value['usergroup'])
 					weaponsList = string.Explode( ",", weaponsEntry[1]['weapons'] )
 					weaponsWhitelist = weaponsEntry[1]['whitelist']

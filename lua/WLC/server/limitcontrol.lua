@@ -26,6 +26,11 @@ end
 function lcSetLimit( usergroup, convar, limit )
 	returnString = {}
 	
+	if utilUsergroupExists(usergroup) == false then
+		table.insert(returnString, "Usergroup " .. usergroup .. " doesn't exist!")
+		return returnString
+	end
+	
 	if lcGmodLimitExists(convar) then
 		if sqlWriteLimitEntry(usergroup, convar, limit) then
 			table.insert(returnString, "Changed limit of gmod limit " .. convar .. " to " .. limit .. " on group " .. usergroup .. ".")
@@ -42,6 +47,11 @@ end
 --- Removes a gmod limit from a group. Returns a string array.
 function lcRemoveLimit( usergroup, convar )
 	returnString = {}
+	
+	if utilUsergroupExists(usergroup) == false then
+		table.insert(returnString, "Usergroup " .. usergroup .. " doesn't exist!")
+		return returnString
+	end
 	
 	if sqlSelectLimitEntry(usergroup, convar) != nil then
 		if sqlDeleteLimitEntry(usergroup, convar) then
@@ -81,7 +91,7 @@ function lcValidateLimit( player, convar )
 		usergroups = sqlSelectLimitUsergroups()
 		if usergroups != nil then
 			for key, value in pairs( usergroups ) do
-				if player:IsUserGroup(value['usergroup']) then 
+				if team.GetName(player:Team()) == value['usergroup'] then 
 					limitEntry = sqlSelectLimitEntry(value['usergroup'], convar)
 					limit = tonumber(limitEntry[1]['maxlimit'])
 

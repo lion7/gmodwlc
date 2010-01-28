@@ -9,7 +9,7 @@
 function utilAdminCheck( player )
 	if player:IsValid() then	
 		for key, value in pairs( convarAdminGroups() ) do
-			if player:IsUserGroup(value) then 
+			if team.GetName(player:Team()) == value then 
 				return true
 			end
 		end
@@ -17,6 +17,17 @@ function utilAdminCheck( player )
 		return false
 	else
 		return true
+	end
+end
+
+--- Checks if the usergroup exists. Returns a boolean.
+function utilUsergroupExists( usergroup )
+	for key, value in pairs( team.GetAllTeams() ) do
+		if table.HasValue(value, usergroup) then
+			return true
+		else
+			return false
+		end
 	end
 end
 
@@ -84,9 +95,12 @@ function utilHelp( command )
 	return returnString
 end
 
-function utilJoinTables(t1, t2)  
-    for k,v in ipairs(t2) do 
-		table.insert(t1, v) 
-	end 
-	return t1  
+function utilJoinTables(t1, t2)
+	if t1 != nil and t2 != nil then
+		for k,v in pairs(t2) do 
+			table.insert(t1, v) 
+		end
+	end
+	
+	return t1
 end 
