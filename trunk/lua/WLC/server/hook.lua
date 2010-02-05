@@ -6,7 +6,7 @@
 
 
 function hookPlayerInitialSpawn( player )
-	if convarEnabled() then		
+	if utilEnabled() then		
 		player:SendHint("This server has weapon restrictions in effect.", 10)
 	end
 end
@@ -15,7 +15,7 @@ hook.Add( "PlayerInitialSpawn", "wcPlayerInitialSpawn", hookPlayerInitialSpawn )
 
 --- Returns a boolean.
 function hookPlayerCanPickupWeapon( player, weapon )
-	if convarEnabled() then
+	if utilEnabled() then
 		if wcValidateWeapon(player, weapon) then
 			return true
 		else
@@ -26,7 +26,7 @@ end
 hook.Add( "PlayerCanPickupWeapon", "wcPlayerCanPickupWeapon", hookPlayerCanPickupWeapon )
 
 function hookInitialize()
-	if convarEnabled() then
+	if utilEnabled() then
 		-- ---------------------------------------------------------
 		--   Name: gamemode:PlayerSpawnRagdoll( ply, model )
 		--   Desc: Return true if it's allowed

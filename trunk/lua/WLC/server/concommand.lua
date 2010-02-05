@@ -17,7 +17,7 @@ function concmdWlc( player, command, args )
 	else		
 		subCommand = args[1]
 		
-		if convarEnabled() == false then	
+		if utilEnabled() == false then	
 			table.insert(result, "WLC is disabled!")
 		elseif subCommand == "help" then
 			if(argsCount == 1) then

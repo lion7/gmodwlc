@@ -4,11 +4,20 @@
 	Holds helpful utility functions.
 ]]
 
+--- Returns a boolean.
+function utilEnabled()
+	return GetConVar("wlc_enabled"):GetBool()
+end
+
+--- Returns a string array.
+function utilAdminGroups()
+	return string.Explode(",", GetConVar("wlc_admingroups"):GetString())
+end
 
 --- Checks if the player has access to this script. Returns a boolean.
 function utilAdminCheck( player )
 	if player:IsValid() then	
-		for key, value in pairs( convarAdminGroups() ) do
+		for value in utilAdminGroups() do
 			if team.GetName(player:Team()) == value then 
 				return true
 			end
@@ -22,7 +31,7 @@ end
 
 --- Checks if the usergroup exists. Returns a boolean.
 function utilUsergroupExists( usergroup )
-	for key, value in pairs( team.GetAllTeams() ) do
+	for key, value in ipairs( team.GetAllTeams() ) do
 		if table.HasValue(value, usergroup) then
 			return true
 		else
