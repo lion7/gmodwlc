@@ -9,6 +9,11 @@ function utilEnabled()
 	return GetConVar("wlc_enabled"):GetBool()
 end
 
+--- Returns a boolean.
+function utilDefaultAction()
+	return GetConVar("wlc_defaultaction"):GetBool()
+end
+
 --- Returns a string array.
 function utilAdminGroups()
 	return string.Explode(",", GetConVar("wlc_admingroups"):GetString())

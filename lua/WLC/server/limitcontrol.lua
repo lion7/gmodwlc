@@ -116,7 +116,7 @@ function lcValidateLimit( player, convar )
 			return false
 		end
 		
-		return true
+		return utilDefaultAction()
 	else
 		return false
 	end
