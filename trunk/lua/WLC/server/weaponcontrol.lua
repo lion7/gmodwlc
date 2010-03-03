@@ -161,7 +161,9 @@ function wcValidateWeapon( player, weapon )
 				end
 			end
 		end
+		
+		return utilDefaultAction()
+	else
+		return false
 	end
-	
-	return false
 end
