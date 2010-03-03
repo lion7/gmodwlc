@@ -7,7 +7,7 @@
 
 --- Checks the weapon restrictions of a group. Returns a string array.
 function wcCheckWeapons( usergroup )
-	returnString = {}
+	local returnString = {}
 
 	weaponsEntry = sqlSelectWeaponsEntry(usergroup)
 	if weaponsEntry != nil then
@@ -31,7 +31,7 @@ end
 
 --- Allows a group to have access to a set of weapons. Returns a string array.
 function wcWhitelistWeapons( usergroup, weapons )
-	returnString = {}
+	local returnString = {}
 	
 	if utilUsergroupExists(usergroup) == false then
 		table.insert(returnString, "Usergroup " .. usergroup .. " doesn't exist!")
@@ -57,7 +57,7 @@ end
 
 --- Denies a group to have access to a set of weapons. Returns a string array.
 function wcBlacklistWeapons( usergroup, weapons )
-	returnString = {}
+	local returnString = {}
 	
 	if utilUsergroupExists(usergroup) == false then
 		table.insert(returnString, "Usergroup " .. usergroup .. " doesn't exist!")
@@ -83,7 +83,7 @@ end
 
 --- Removes all weapon restrictions of a group. Returns a string array.
 function wcUnlistUsergroup( usergroup )
-	returnString = {}
+	local returnString = {}
 	
 	if sqlSelectWeaponsEntry(usergroup) != nil then
 		if sqlDeleteWeaponsEntry(usergroup) then
@@ -100,33 +100,59 @@ end
 
 --- Validates if a weapon exists. Returns a boolean.
 function wcWeaponExists( weaponclass )
-	return true
-	-- if table.HasValue(weapons.GetList(), weaponclass) then
-		-- return true
-	-- else
-		-- return false
-	-- end 
+	local weaponsList = {}
+	utilJoinTables(weaponsList, weapons.GetList())
+	table.insert(weaponsList, "weapon_crowbar")
+	table.insert(weaponsList, "weapon_physcannon")
+	table.insert(weaponsList, "weapon_physgun")
+	table.insert(weaponsList, "weapon_pistol")
+	table.insert(weaponsList, "weapon_357")
+	table.insert(weaponsList, "weapon_smg1")
+	table.insert(weaponsList, "weapon_ar2")
+	table.insert(weaponsList, "weapon_shotgun")
+	table.insert(weaponsList, "weapon_crossbow")
+	table.insert(weaponsList, "weapon_frag")
+	table.insert(weaponsList, "weapon_rpg")
+	table.insert(weaponsList, "weapon_stunstick")
+	table.insert(weaponsList, "weapon_slam")
+	table.insert(weaponsList, "weapon_bugbait")
+	table.insert(weaponsList, "weapon_annabelle")
+	table.insert(weaponsList, "gmod_tool")
+	table.insert(weaponsList, "gmod_camera")
+	table.insert(weaponsList, "item_ml_grenade")
+	table.insert(weaponsList, "item_ar2_grenade")
+	table.insert(weaponsList, "item_ammo_ar2_altfire")
+	table.insert(weaponsList, "item_healthkit")
+	table.insert(weaponsList, "item_healthvial")
+	table.insert(weaponsList, "item_suit")
+	table.insert(weaponsList, "item_battery")
+	
+	if table.HasValue(weaponsList, weaponclass) then
+		return true
+	else
+		return false
+	end 
 end
 
 --- Validates if the specified weapon is allowed for the player's usergroup. Returns a boolean.
 function wcValidateWeapon( player, weapon )
 	if player:IsValid() then	
-		usergroups = sqlSelectWeaponsUsergroups()
+		local usergroups = sqlSelectWeaponsUsergroups()
 		if usergroups != nil then
 			for key, value in pairs( usergroups ) do
 				if team.GetName(player:Team()) == value['usergroup'] then 
-					weaponsEntry = sqlSelectWeaponsEntry(value['usergroup'])
-					weaponsList = string.Explode( ",", weaponsEntry[1]['weapons'] )
-					weaponsWhitelist = weaponsEntry[1]['whitelist']
+					local weaponsEntry = sqlSelectWeaponsEntry(value['usergroup'])
+					local weaponsList = string.Explode( ",", weaponsEntry[1]['weapons'] )
+					local weaponsWhitelist = weaponsEntry[1]['whitelist']
 					
 					if table.HasValue(weaponsList, weapon:GetClass()) then
-						if weaponsWhitelist == true then
+						if weaponsWhitelist == tostring(true) then
 							return true
 						else
 							return false
 						end
 					else
-						if weaponsWhitelist == true then
+						if weaponsWhitelist == tostring(true) then
 							return false
 						else
 							return true
@@ -135,9 +161,7 @@ function wcValidateWeapon( player, weapon )
 				end
 			end
 		end
-		
-		return true
-	else
-		return false
 	end
+	
+	return false
 end

@@ -6,8 +6,8 @@
 
 
 --- Checks all limits of a group. Returns a string array.
-function lcCheckLimit( usergroup )
-	returnString = {}
+function lcCheckLimits( usergroup )
+	local returnString = {}
 	
 	limitEntry = sqlSelectLimitEntry(usergroup)
 	if limitEntry != nil then
@@ -24,17 +24,20 @@ end
 
 --- Gives a group a different limit to a specific gmod limit. Returns a string array.
 function lcSetLimit( usergroup, convar, limit )
-	returnString = {}
+	local returnString = {}
+	limit = math.floor(limit + 0.5)
 	
 	if utilUsergroupExists(usergroup) == false then
 		table.insert(returnString, "Usergroup " .. usergroup .. " doesn't exist!")
 		return returnString
 	end
 	
+	print("sqlWriteLimitEntry("..usergroup..", "..convar..", "..limit.."):"..tostring(sqlWriteLimitEntry(usergroup, convar, limit)))
+	
 	if lcGmodLimitExists(convar) then
 		if sqlWriteLimitEntry(usergroup, convar, limit) then
 			table.insert(returnString, "Changed limit of gmod limit " .. convar .. " to " .. limit .. " on group " .. usergroup .. ".")
-		else		
+		else
 			table.insert(returnString, "Unhandled error while setting limit!")
 		end
 	else
@@ -46,7 +49,7 @@ end
 
 --- Removes a gmod limit from a group. Returns a string array.
 function lcRemoveLimit( usergroup, convar )
-	returnString = {}
+	local returnString = {}
 	
 	if utilUsergroupExists(usergroup) == false then
 		table.insert(returnString, "Usergroup " .. usergroup .. " doesn't exist!")

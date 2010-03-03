@@ -6,7 +6,7 @@
 
 --- Returns a string array.
 function sqlValidateTables()
-	returnString = {}
+	local returnString = {}
 
 	if !sql.TableExists("wlc_weapons") then
 		query = "CREATE TABLE wlc_weapons( usergroup VARCHAR(255) NOT NULL, weapons VARCHAR(255) NOT NULL, whitelist BOOLEAN NOT NULL, PRIMARY KEY(usergroup) );"
@@ -39,7 +39,7 @@ end
 
 --- Returns a string array.
 function sqlRemoveTables()
-	returnString = {}
+	local returnString = {}
 
 	if sql.TableExists("wlc_weapons") then
 		query = "DROP TABLE wlc_weapons;"
@@ -100,7 +100,7 @@ function sqlWriteWeaponsEntry(usergroup, weapons, whitelist)
 		query = "UPDATE wlc_weapons SET weapons = '" .. weapons .. "', whitelist = '" .. tostring(whitelist) .. "' WHERE usergroup = '" .. usergroup .. "';"
 		sql.Query(query)
 		weaponEntry = sqlSelectWeaponsEntry(usergroup)
-		if weaponEntry[1]['weapons'] == weapons or weaponEntry[1]['whitelist'] == whitelist then
+		if weaponEntry[1]['weapons'] == weapons or weaponEntry[1]['whitelist'] == tostring(whitelist) then
 			return true
 		else
 			return false
@@ -118,8 +118,6 @@ function sqlDeleteWeaponsEntry(usergroup)
 		return false
 	end
 end
-
-
 
 --- Returns a sql result.
 function sqlSelectLimitUsergroups()		
@@ -153,7 +151,8 @@ function sqlWriteLimitEntry(usergroup, convar, maxlimit)
 		query = "UPDATE wlc_limits SET maxlimit = '" .. tostring(maxlimit) .. "' WHERE usergroup = '" .. usergroup .. "' AND convar = '" .. convar .. "';"
 		sql.Query(query)
 		limitEntry = sqlSelectLimitEntry(usergroup, convar)
-		if limitEntry[1]['maxlimit'] == maxlimit then
+		
+		if tonumber(limitEntry[1]['maxlimit']) == maxlimit then
 			return true
 		else
 			return false
