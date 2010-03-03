@@ -16,13 +16,14 @@ end
 
 --- Checks if the player has access to this script. Returns a boolean.
 function utilAdminCheck( player )
-	if player:IsValid() then	
-		for value in utilAdminGroups() do
-			if team.GetName(player:Team()) == value then 
+	if player:IsValid() then
+		playerTeam = team.GetName(player:Team())
+		for key, value in pairs( utilAdminGroups() ) do
+			if playerTeam == value then
 				return true
 			end
 		end
-		
+			
 		return false
 	else
 		return true
@@ -31,7 +32,7 @@ end
 
 --- Checks if the usergroup exists. Returns a boolean.
 function utilUsergroupExists( usergroup )
-	for key, value in ipairs( team.GetAllTeams() ) do
+	for key, value in pairs( team.GetAllTeams() ) do
 		if table.HasValue(value, usergroup) then
 			return true
 		else
@@ -42,44 +43,38 @@ end
 
 --- Returns help about all commands or a specific command. Returns a string array.
 function utilHelp( command )
-	returnString = {}
+	local returnString = {}
 		
 	if command == nil then
-		table.insert(returnString, "Available commands:")
-		table.insert(returnString, "")
-		table.insert(returnString, "wlc help [command]")
-		table.insert(returnString, "\tExample: wlc help check")
-		table.insert(returnString, "\tDescription: Shows a description and examples about the provided command, or all commands if none provided.")
-		table.insert(returnString, "")
+		table.insert(returnString, "\n\rAvailable commands:\n\r")
 		
-		table.insert(returnString, "wlc check group")
-		table.insert(returnString, "\tExample: wlc check superadmin")
-		table.insert(returnString, "\tDescription: Shows the restrictions and limits active on the group.")
-		table.insert(returnString, "")
+		table.insert(returnString, "wlc help [[command]]")
+		table.insert(returnString, "Example: wlc help check")
+		table.insert(returnString, "Description: Shows a description and examples about the provided command, or all commands if none provided.\n\r")
 		
-		table.insert(returnString, "wlc blacklist group weapons")
-		table.insert(returnString, "\tExample: wlc blacklist admin weapon_rpg,weapon_frag")
-		table.insert(returnString, "\tDescription: Prevents an group from spawning the provided weapons.")
-		table.insert(returnString, "")
+		table.insert(returnString, "wlc check [group]")
+		table.insert(returnString, "Example: wlc check superadmin")
+		table.insert(returnString, "Description: Shows the restrictions and limits active on the group.\n\r")
 		
-		table.insert(returnString, "wlc whitelist group weapons")
-		table.insert(returnString, "\tExample: wlc whitelist user weapon_psyscannon,gmod_camera") 
-		table.insert(returnString, "\tDescription: Allows an group to spawn only the provided weapons.")
-		table.insert(returnString, "")
+		table.insert(returnString, "wlc blacklist [group] [weapons]")
+		table.insert(returnString, "Example: wlc blacklist admin weapon_rpg,weapon_frag")
+		table.insert(returnString, "Description: Prevents an group from spawning the provided weapons.\n\r")
 		
-		table.insert(returnString, "wlc unlist group")
-		table.insert(returnString, "\tExample: wlc unlist moderator")
-		table.insert(returnString, "\tDescription: Removes all weapon restrictions.")
-		table.insert(returnString, "")
+		table.insert(returnString, "wlc whitelist [group] [weapons]")
+		table.insert(returnString, "Example: wlc whitelist user weapon_psyscannon,gmod_camera") 
+		table.insert(returnString, "Description: Allows an group to spawn only the provided weapons.\n\r")
 		
-		table.insert(returnString, "wlc setlimit group convar newlimit")
-		table.insert(returnString, "\tExample: wlc setlimit admin sbox_maxnpcs 10")
-		table.insert(returnString, "\tDescription: Sets an new limit for the provided convar. Use -1 for unlimited.")
-		table.insert(returnString, "")
+		table.insert(returnString, "wlc unlist [group]")
+		table.insert(returnString, "Example: wlc unlist moderator")
+		table.insert(returnString, "Description: Removes all weapon restrictions.\n\r")
 		
-		table.insert(returnString, "wlc removelimit group [convar]")
-		table.insert(returnString, "\tExample: wlc removelimit admin sbox_maxnpcs")
-		table.insert(returnString, "\tDescription: Removes the limit set for the provided convar, or all limits if no convar specified.")
+		table.insert(returnString, "wlc setlimit [group] [convar] [newlimit]")
+		table.insert(returnString, "Example: wlc setlimit admin sbox_maxnpcs 10")
+		table.insert(returnString, "Description: Sets an new limit for the provided convar. Use -1 for unlimited.\n\r")
+		
+		table.insert(returnString, "wlc removelimit [group] [[convar]]")
+		table.insert(returnString, "Example: wlc removelimit admin sbox_maxnpcs")
+		table.insert(returnString, "Description: Removes the limit set for the provided convar, or all limits if no convar specified.\n\r")
 	else
 		if command == "help" then
 			table.insert(returnString, "No help available yet.")
@@ -104,12 +99,16 @@ function utilHelp( command )
 	return returnString
 end
 
-function utilJoinTables(t1, t2)
-	if t1 != nil and t2 != nil then
-		for k,v in pairs(t2) do 
-			table.insert(t1, v) 
+function utilJoinTables(table1, table2)
+	if table1 == nil then
+		table1 = {}
+	end
+	
+	if table2 != nil then
+		for key, value in pairs(table2) do 
+			table.insert(table1, value) 
 		end
 	end
 	
-	return t1
+	return table1
 end 

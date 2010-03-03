@@ -7,15 +7,15 @@
 
 --- Gets called if an admin typed 'wlc' in the console.
 function concmdWlc( player, command, args )
-	argsCount = table.Count(args)
-	result = {}
+	local argsCount = table.Count(args)
+	local result = {}
 	
 	if utilAdminCheck(player) == false then
 		table.insert(result, "You are not allowed to access this command!")
 	elseif argsCount < 1 then	
 		table.insert(result, "Please provide a subcommand!")
 	else		
-		subCommand = args[1]
+		local subCommand = args[1]
 		
 		if utilEnabled() == false then	
 			table.insert(result, "WLC is disabled!")
@@ -37,7 +37,7 @@ function concmdWlc( player, command, args )
 			elseif(argsCount == 2) then	
 				if utilUsergroupExists(args[2]) then
 					utilJoinTables(result, wcCheckWeapons(args[2]))
-					utilJoinTables(result, lcCheckLimit(args[2]))
+					utilJoinTables(result, lcCheckLimits(args[2]))
 				else
 					table.insert(result, "Usergroup " .. args[2] .. " doesn't exist!")
 				end
