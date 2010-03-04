@@ -98,36 +98,10 @@ function wcUnlistUsergroup( usergroup )
 	return returnString
 end
 
+
 --- Validates if a weapon exists. Returns a boolean.
 function wcWeaponExists( weaponclass )
-	local weaponsList = {}
-	utilJoinTables(weaponsList, weapons.GetList())
-	table.insert(weaponsList, "weapon_crowbar")
-	table.insert(weaponsList, "weapon_physcannon")
-	table.insert(weaponsList, "weapon_physgun")
-	table.insert(weaponsList, "weapon_pistol")
-	table.insert(weaponsList, "weapon_357")
-	table.insert(weaponsList, "weapon_smg1")
-	table.insert(weaponsList, "weapon_ar2")
-	table.insert(weaponsList, "weapon_shotgun")
-	table.insert(weaponsList, "weapon_crossbow")
-	table.insert(weaponsList, "weapon_frag")
-	table.insert(weaponsList, "weapon_rpg")
-	table.insert(weaponsList, "weapon_stunstick")
-	table.insert(weaponsList, "weapon_slam")
-	table.insert(weaponsList, "weapon_bugbait")
-	table.insert(weaponsList, "weapon_annabelle")
-	table.insert(weaponsList, "gmod_tool")
-	table.insert(weaponsList, "gmod_camera")
-	table.insert(weaponsList, "item_ml_grenade")
-	table.insert(weaponsList, "item_ar2_grenade")
-	table.insert(weaponsList, "item_ammo_ar2_altfire")
-	table.insert(weaponsList, "item_healthkit")
-	table.insert(weaponsList, "item_healthvial")
-	table.insert(weaponsList, "item_suit")
-	table.insert(weaponsList, "item_battery")
-	
-	if table.HasValue(weaponsList, weaponclass) then
+	if table.HasValue(utilWeaponsList(), weaponclass) then
 		return true
 	else
 		return false

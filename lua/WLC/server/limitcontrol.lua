@@ -107,16 +107,19 @@ function lcValidateLimit( player, convar )
 				end
 			end
 		end
-						
-		defaultlimit = server_settings.Int(convar, 0)
-		if player:GetCount(entityType) < defaultlimit or defaultlimit < 0 then 
-			return true
+		
+		if utilDefaultAction() then
+			defaultlimit = server_settings.Int(convar, 0)
+			if player:GetCount(entityType) < defaultlimit or defaultlimit < 0 then 
+				return true
+			else
+				player:LimitHit(entityType)
+				return false
+			end
 		else
 			player:LimitHit(entityType)
 			return false
 		end
-		
-		return utilDefaultAction()
 	else
 		return false
 	end
