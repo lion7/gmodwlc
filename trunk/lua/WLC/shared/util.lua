@@ -22,13 +22,14 @@ end
 --- Checks if the player has access to this script. Returns a boolean.
 function utilAdminCheck( player )
 	if player:IsValid() then
-		playerTeam = team.GetName(player:Team())
+		-- playerTeam = team.GetName(player:Team())
 		for key, value in pairs( utilAdminGroups() ) do
-			if playerTeam == value then
+			-- if playerTeam == value then
+			if player:IsUserGroup(value) then
 				return true
 			end
 		end
-			
+		
 		return false
 	else
 		return true
@@ -45,6 +46,71 @@ function utilUsergroupExists( usergroup )
 		end
 	end
 end
+
+
+-- Copies all entries in table2 to table1. Returns a table.
+function utilJoinTables(table1, table2)
+	if table1 == nil then
+		table1 = {}
+	end
+	
+	if table2 != nil then
+		for key, value in pairs(table2) do 
+			table.insert(table1, value) 
+		end
+	end
+	
+	return table1
+end 
+
+
+--- Returns a string array with all known weapon classnames.
+function utilWeaponsList()
+	local weaponsList = {}
+	table.insert(weaponsList, "weapon_crowbar")
+	table.insert(weaponsList, "weapon_physcannon")
+	table.insert(weaponsList, "weapon_physgun")
+	table.insert(weaponsList, "weapon_pistol")
+	table.insert(weaponsList, "weapon_357")
+	table.insert(weaponsList, "weapon_smg1")
+	table.insert(weaponsList, "weapon_ar2")
+	table.insert(weaponsList, "weapon_shotgun")
+	table.insert(weaponsList, "weapon_crossbow")
+	table.insert(weaponsList, "weapon_frag")
+	table.insert(weaponsList, "weapon_rpg")
+	table.insert(weaponsList, "weapon_stunstick")
+	table.insert(weaponsList, "weapon_slam")
+	table.insert(weaponsList, "weapon_bugbait")
+	table.insert(weaponsList, "weapon_annabelle")
+	table.insert(weaponsList, "gmod_tool")
+	table.insert(weaponsList, "gmod_camera")
+	table.insert(weaponsList, "item_ml_grenade")
+	table.insert(weaponsList, "item_ar2_grenade")
+	table.insert(weaponsList, "item_ammo_ar2_altfire")
+	table.insert(weaponsList, "item_healthkit")
+	table.insert(weaponsList, "item_healthvial")
+	table.insert(weaponsList, "item_suit")
+	table.insert(weaponsList, "item_battery")
+	for key, value in pairs(weapons.GetList()) do 
+		table.insert(weaponsList, value['ClassName']) 
+	end
+	
+	return weaponsList
+end
+
+
+--- Returns a string array with a list of convars.
+function utilConvarList()
+	local convarList = {}
+	table.insert(convarList, "sbox_maxeffects")
+	table.insert(convarList, "sbox_maxnpcs")
+	table.insert(convarList, "sbox_maxprops")
+	table.insert(convarList, "sbox_maxragdolls")
+	table.insert(convarList, "sbox_maxvehicles")
+	
+	return convarList
+end
+
 
 --- Returns help about all commands or a specific command. Returns a string array.
 function utilHelp( command )
@@ -103,17 +169,3 @@ function utilHelp( command )
 		
 	return returnString
 end
-
-function utilJoinTables(table1, table2)
-	if table1 == nil then
-		table1 = {}
-	end
-	
-	if table2 != nil then
-		for key, value in pairs(table2) do 
-			table.insert(table1, value) 
-		end
-	end
-	
-	return table1
-end 
