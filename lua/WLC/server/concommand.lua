@@ -14,6 +14,7 @@ function concmdWlc( player, command, args )
 		table.insert(result, "You are not allowed to access this command!")
 	elseif argsCount < 1 then	
 		table.insert(result, "Please provide a subcommand!")
+		table.insert(result, "For a list of commands, type 'wlc help'.")
 	else		
 		local subCommand = args[1]
 		
@@ -37,6 +38,34 @@ function concmdWlc( player, command, args )
 			elseif(argsCount == 2) then	
 				if utilUsergroupExists(args[2]) then
 					utilJoinTables(result, wcCheckWeapons(args[2]))
+					utilJoinTables(result, lcCheckLimits(args[2]))
+				else
+					table.insert(result, "Usergroup " .. args[2] .. " doesn't exist!")
+				end
+			else
+				table.insert(result, "Unhandled error!")
+			end
+		elseif subCommand == "weaponcheck" then
+			if(argsCount == 1) then
+				table.insert(result, "Please provide a group to check for weapon restrictions!")
+			elseif(argsCount > 2) then
+				table.insert(result, "Too much arguments!")
+			elseif(argsCount == 2) then	
+				if utilUsergroupExists(args[2]) then
+					utilJoinTables(result, wcCheckWeapons(args[2]))
+				else
+					table.insert(result, "Usergroup " .. args[2] .. " doesn't exist!")
+				end
+			else
+				table.insert(result, "Unhandled error!")
+			end
+		elseif subCommand == "limitcheck" then
+			if(argsCount == 1) then
+				table.insert(result, "Please provide a group to check for limits!")
+			elseif(argsCount > 2) then
+				table.insert(result, "Too much arguments!")
+			elseif(argsCount == 2) then	
+				if utilUsergroupExists(args[2]) then
 					utilJoinTables(result, lcCheckLimits(args[2]))
 				else
 					table.insert(result, "Usergroup " .. args[2] .. " doesn't exist!")
@@ -120,8 +149,14 @@ function concmdWlc( player, command, args )
 		if result == nil then
 			player:PrintMessage(HUD_PRINTCONSOLE, "No output returned.")
 		else
+			if subCommand != "help" then
+				print("\nAction(s) by " .. player:Name() .. ":")
+			end
 			for key, value in pairs( result ) do
 				player:PrintMessage(HUD_PRINTCONSOLE, value)
+				if subCommand != "help" then
+					print(value)
+				end
 			end
 		end
 	else

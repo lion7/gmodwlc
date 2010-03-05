@@ -45,7 +45,7 @@ function sqlRemoveTables()
 		query = "DROP TABLE wlc_weapons;"
 		deleteResult = sql.Query(query)
 		if !sql.TableExists("wlc_weapons") then
-			table.insert(returnString, "--  Table wlc_weapons deleted     --")
+			table.insert(returnString, "--  Table wlc_weapons deleted    --")
 		else
 			table.insert(returnString, "Something went wrong when deleting the wlc_weapons table!")
 			table.insert(returnString, sql.LastError( deleteResult ))
