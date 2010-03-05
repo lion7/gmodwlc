@@ -27,7 +27,7 @@ function lcSetLimit( usergroup, convar, limit )
 	local returnString = {}
 	limit = math.floor(limit + 0.5)
 	
-	if utilUsergroupExists(usergroup) == false then
+	if utilTeamExists(usergroup) == false then
 		table.insert(returnString, "Usergroup " .. usergroup .. " doesn't exist!")
 		return returnString
 	end
@@ -49,7 +49,7 @@ end
 function lcRemoveLimit( usergroup, convar )
 	local returnString = {}
 	
-	if utilUsergroupExists(usergroup) == false then
+	if utilTeamExists(usergroup) == false then
 		table.insert(returnString, "Usergroup " .. usergroup .. " doesn't exist!")
 		return returnString
 	end

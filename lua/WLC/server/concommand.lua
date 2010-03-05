@@ -36,7 +36,7 @@ function concmdWlc( player, command, args )
 			elseif(argsCount > 2) then
 				table.insert(result, "Too much arguments!")
 			elseif(argsCount == 2) then	
-				if utilUsergroupExists(args[2]) then
+				if utilTeamExists(args[2]) then
 					utilJoinTables(result, wcCheckWeapons(args[2]))
 					utilJoinTables(result, lcCheckLimits(args[2]))
 				else
@@ -51,7 +51,7 @@ function concmdWlc( player, command, args )
 			elseif(argsCount > 2) then
 				table.insert(result, "Too much arguments!")
 			elseif(argsCount == 2) then	
-				if utilUsergroupExists(args[2]) then
+				if utilTeamExists(args[2]) then
 					utilJoinTables(result, wcCheckWeapons(args[2]))
 				else
 					table.insert(result, "Usergroup " .. args[2] .. " doesn't exist!")
@@ -65,7 +65,7 @@ function concmdWlc( player, command, args )
 			elseif(argsCount > 2) then
 				table.insert(result, "Too much arguments!")
 			elseif(argsCount == 2) then	
-				if utilUsergroupExists(args[2]) then
+				if utilTeamExists(args[2]) then
 					utilJoinTables(result, lcCheckLimits(args[2]))
 				else
 					table.insert(result, "Usergroup " .. args[2] .. " doesn't exist!")
