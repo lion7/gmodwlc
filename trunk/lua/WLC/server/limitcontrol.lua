@@ -32,8 +32,6 @@ function lcSetLimit( usergroup, convar, limit )
 		return returnString
 	end
 	
-	print("sqlWriteLimitEntry("..usergroup..", "..convar..", "..limit.."):"..tostring(sqlWriteLimitEntry(usergroup, convar, limit)))
-	
 	if lcGmodLimitExists(convar) then
 		if sqlWriteLimitEntry(usergroup, convar, limit) then
 			table.insert(returnString, "Changed limit of gmod limit " .. convar .. " to " .. limit .. " on group " .. usergroup .. ".")
@@ -96,19 +94,22 @@ function lcValidateLimit( player, convar )
 			for key, value in pairs( usergroups ) do
 				if team.GetName(player:Team()) == value['usergroup'] then 
 					limitEntry = sqlSelectLimitEntry(value['usergroup'], convar)
-					limit = tonumber(limitEntry[1]['maxlimit'])
+					if limitEntry != nil then
+						limit = tonumber(limitEntry[1]['maxlimit'])
 
-					if player:GetCount(entityType) < limit or limit < 0 then 
-						return true
+						if player:GetCount(entityType) < limit or limit < 0 then 
+							return true
+						else
+							player:LimitHit(entityType)
+							return false
+						end
 					else
 						player:LimitHit(entityType)
 						return false
 					end
 				end
 			end
-		end
-		
-		if utilDefaultAction() then
+		elseif utilDefaultAction() then
 			defaultlimit = server_settings.Int(convar, 0)
 			if player:GetCount(entityType) < defaultlimit or defaultlimit < 0 then 
 				return true
