@@ -36,19 +36,30 @@ function utilAdminCheck( player )
 	end
 end
 
---- Checks if the usergroup exists. Returns a boolean.
-function utilUsergroupExists( usergroup )
+
+-- --- Checks if the usergroup exists. Returns a boolean.
+-- function utilUsergroupExists( usergroup )
+	-- for key, value in pairs( ??? ) do
+		-- if value == usergroup then
+			-- return true
+		-- end
+	-- end
+	-- return false
+-- end
+
+
+--- Checks if the team exists. Returns a boolean.
+function utilTeamExists( teamName )
 	for key, value in pairs( team.GetAllTeams() ) do
-		if table.HasValue(value, usergroup) then
+		if value['Name'] == teamName then
 			return true
-		else
-			return false
 		end
 	end
+	return false
 end
 
 
--- Copies all entries in table2 to table1. Returns a table.
+--- Copies all entries in table2 to table1. Returns a table.
 function utilJoinTables(table1, table2)
 	if table1 == nil then
 		table1 = {}

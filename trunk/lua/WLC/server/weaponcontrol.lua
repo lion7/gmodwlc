@@ -33,7 +33,7 @@ end
 function wcWhitelistWeapons( usergroup, weapons )
 	local returnString = {}
 	
-	if utilUsergroupExists(usergroup) == false then
+	if utilTeamExists(usergroup) == false then
 		table.insert(returnString, "Usergroup " .. usergroup .. " doesn't exist!")
 		return returnString
 	end
@@ -59,7 +59,7 @@ end
 function wcBlacklistWeapons( usergroup, weapons )
 	local returnString = {}
 	
-	if utilUsergroupExists(usergroup) == false then
+	if utilTeamExists(usergroup) == false then
 		table.insert(returnString, "Usergroup " .. usergroup .. " doesn't exist!")
 		return returnString
 	end
@@ -100,12 +100,13 @@ end
 
 
 --- Validates if a weapon exists. Returns a boolean.
-function wcWeaponExists( weaponclass )
-	if table.HasValue(utilWeaponsList(), weaponclass) then
-		return true
-	else
-		return false
-	end 
+function wcWeaponExists( weaponClass )
+	for key, value in pairs( utilWeaponsList() ) do
+		if value == weaponClass then
+			return true
+		end
+	end
+	return false
 end
 
 --- Validates if the specified weapon is allowed for the player's usergroup. Returns a boolean.
@@ -119,18 +120,19 @@ function wcValidateWeapon( player, weapon )
 					local weaponsList = string.Explode( ",", weaponsEntry[1]['weapons'] )
 					local weaponsWhitelist = weaponsEntry[1]['whitelist']
 					
-					if table.HasValue(weaponsList, weapon:GetClass()) then
-						if weaponsWhitelist == tostring(true) then
-							return true
-						else
-							return false
+					for key, value in pairs( weaponsList ) do
+						if value == weapon:GetClass() then
+							if weaponsWhitelist == tostring(true) then
+								return true
+							else
+								return false
+							end
 						end
+					end
+					if weaponsWhitelist == tostring(true) then
+						return false
 					else
-						if weaponsWhitelist == tostring(true) then
-							return false
-						else
-							return true
-						end
+						return true
 					end
 				end
 			end
