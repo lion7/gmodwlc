@@ -1,3 +1,5 @@
 Comments toevoegen.
 Superadmin krijgt rechten van admin.
 Checks voor buttons, thrusters, etc toevoegen.
+
+Blacklist/whitelist weghalen. Nu alleen blacklist: 'wlc restrictweapon Admin weapon_crowbar'. één entry voor elk wapen, dus net zoals limits.
