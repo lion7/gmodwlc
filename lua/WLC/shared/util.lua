@@ -50,12 +50,67 @@ end
 
 --- Checks if the team exists. Returns a boolean.
 function utilTeamExists( teamName )
-	for key, value in pairs( team.GetAllTeams() ) do
+	for key, value in pairs( utilTeamsList() ) do
 		if value['Name'] == teamName then
 			return true
 		end
 	end
 	return false
+end
+
+
+--- Returns a string array with all known weapon classnames.
+function utilTeamsList()
+	local teamsList = team.GetAllTeams()
+	table.remove(teamsList, 0)
+	table.remove(teamsList, 1001)
+	table.remove(teamsList, 1002)
+	
+	return weaponsList
+end
+
+
+local weaponsList = {}
+table.insert(weaponsList, "weapon_crowbar")
+table.insert(weaponsList, "weapon_physcannon")
+table.insert(weaponsList, "weapon_physgun")
+table.insert(weaponsList, "weapon_pistol")
+table.insert(weaponsList, "weapon_357")
+table.insert(weaponsList, "weapon_smg1")
+table.insert(weaponsList, "weapon_ar2")
+table.insert(weaponsList, "weapon_shotgun")
+table.insert(weaponsList, "weapon_crossbow")
+table.insert(weaponsList, "weapon_frag")
+table.insert(weaponsList, "weapon_rpg")
+table.insert(weaponsList, "weapon_stunstick")
+table.insert(weaponsList, "weapon_slam")
+table.insert(weaponsList, "weapon_bugbait")
+table.insert(weaponsList, "weapon_annabelle")
+-- table.insert(weaponsList, "item_ml_grenade")
+-- table.insert(weaponsList, "item_ar2_grenade")
+-- table.insert(weaponsList, "item_ammo_ar2_altfire")
+-- table.insert(weaponsList, "item_healthkit")
+-- table.insert(weaponsList, "item_healthvial")
+-- table.insert(weaponsList, "item_suit")
+-- table.insert(weaponsList, "item_battery")
+for key, value in pairs(weapons.GetList()) do 
+	table.insert(weaponsList, value['ClassName']) 
+end
+--- Returns a string array with all known weapon classnames.
+function utilWeaponsList()
+	return weaponsList
+end
+
+
+local convarList = {}
+table.insert(convarList, "sbox_maxeffects")
+table.insert(convarList, "sbox_maxnpcs")
+table.insert(convarList, "sbox_maxprops")
+table.insert(convarList, "sbox_maxragdolls")
+table.insert(convarList, "sbox_maxvehicles")
+--- Returns a string array with a list of convars.
+function utilConvarList()
+	return convarList
 end
 
 
@@ -72,52 +127,6 @@ function utilJoinTables(table1, table2)
 	end
 	
 	return table1
-end 
-
-
---- Returns a string array with all known weapon classnames.
-function utilWeaponsList()
-	local weaponsList = {}
-	table.insert(weaponsList, "weapon_crowbar")
-	table.insert(weaponsList, "weapon_physcannon")
-	table.insert(weaponsList, "weapon_physgun")
-	table.insert(weaponsList, "weapon_pistol")
-	table.insert(weaponsList, "weapon_357")
-	table.insert(weaponsList, "weapon_smg1")
-	table.insert(weaponsList, "weapon_ar2")
-	table.insert(weaponsList, "weapon_shotgun")
-	table.insert(weaponsList, "weapon_crossbow")
-	table.insert(weaponsList, "weapon_frag")
-	table.insert(weaponsList, "weapon_rpg")
-	table.insert(weaponsList, "weapon_stunstick")
-	table.insert(weaponsList, "weapon_slam")
-	table.insert(weaponsList, "weapon_bugbait")
-	table.insert(weaponsList, "weapon_annabelle")
-	table.insert(weaponsList, "item_ml_grenade")
-	table.insert(weaponsList, "item_ar2_grenade")
-	table.insert(weaponsList, "item_ammo_ar2_altfire")
-	table.insert(weaponsList, "item_healthkit")
-	table.insert(weaponsList, "item_healthvial")
-	table.insert(weaponsList, "item_suit")
-	table.insert(weaponsList, "item_battery")
-	for key, value in pairs(weapons.GetList()) do 
-		table.insert(weaponsList, value['ClassName']) 
-	end
-	
-	return weaponsList
-end
-
-
---- Returns a string array with a list of convars.
-function utilConvarList()
-	local convarList = {}
-	table.insert(convarList, "sbox_maxeffects")
-	table.insert(convarList, "sbox_maxnpcs")
-	table.insert(convarList, "sbox_maxprops")
-	table.insert(convarList, "sbox_maxragdolls")
-	table.insert(convarList, "sbox_maxvehicles")
-	
-	return convarList
 end
 
 

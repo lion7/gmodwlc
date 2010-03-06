@@ -76,7 +76,7 @@ function concmdWlcGui( player, command, args )
 			usergroupListView:SetSize( 475, 500 )
 			usergroupListView:SetMultiSelect( true )
 			usergroupListView:AddColumn( "Usergroup(s)" )
-			for key, value in pairs( team.GetAllTeams() ) do
+			for key, value in pairs( utilTeamsList() ) do
 				usergroupListView:AddLine( value['Name'] )
 			end
 			usergroupListView:SetSortable( true )
