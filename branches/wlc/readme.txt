@@ -1,4 +1,4 @@
 Name: WLC - Weapon and Limit Control
 Author: Lion
-Description: 
-Configuration: 
+Description: Not available yet.
+Configuration: Not available yet.

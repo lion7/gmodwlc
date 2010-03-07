@@ -93,9 +93,9 @@ table.insert(weaponsList, "weapon_annabelle")
 -- table.insert(weaponsList, "item_healthvial")
 -- table.insert(weaponsList, "item_suit")
 -- table.insert(weaponsList, "item_battery")
-for key, value in pairs(weapons.GetList()) do 
-	table.insert(weaponsList, value['ClassName']) 
-end
+-- for key, value in pairs(weapons.GetList()) do 
+	-- table.insert(weaponsList, value['ClassName']) 
+-- end
 --- Returns a string array with all known weapon classnames.
 function utilWeaponsList()
 	return weaponsList
