@@ -1,6 +1,6 @@
 --[[
 	Title: Utilities
-
+ 
 	Holds helpful utility functions.
 ]]
 
