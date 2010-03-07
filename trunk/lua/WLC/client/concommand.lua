@@ -3,7 +3,7 @@
 
 	Holds console commands and their functions.
 ]]
-
+ 
 
 --- Gets called if an admin typed 'wlcgui' in the console.
 function concmdWlcGui( player, command, args )
