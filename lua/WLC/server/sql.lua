@@ -10,15 +10,15 @@ function sqlValidateTables()
 	local returnString = {}
 
 	if sqlValidateWeaponsTable() then
-		table.insert(returnString, "--  Table wlc_weapons is valid   --")
+		table.insert(returnString, "Table wlc_weapons is valid")
 	else		
-		table.insert(returnString, "--  Table wlc_weapons is invalid --")
+		table.insert(returnString, "Table wlc_weapons is invalid")
 	end
 	
 	if sqlValidateLimitsTable() then
-		table.insert(returnString, "--  Table wlc_limits is valid    --")
+		table.insert(returnString, "Table wlc_limits is valid")
 	else		
-		table.insert(returnString, "--  Table wlc_limits is invalid  --")
+		table.insert(returnString, "Table wlc_limits is invalid")
 	end
 	
 	return returnString
@@ -30,15 +30,15 @@ function sqlCreateTables()
 	local returnString = {}
 	
 	if sqlCreateWeaponsTable() then
-		table.insert(returnString, "--  Table wlc_weapons created    --")
+		table.insert(returnString, "Table wlc_weapons created")
 	else		
-		table.insert(returnString, "--  Table wlc_weapons not created--")
+		table.insert(returnString, "Table wlc_weapons not created")
 	end
 	
 	if sqlCreateLimitsTable() then
-		table.insert(returnString, "--  Table wlc_limits created     --")
+		table.insert(returnString, "Table wlc_limits created")
 	else		
-		table.insert(returnString, "--  Table wlc_limits not created --")
+		table.insert(returnString, "Table wlc_limits not created")
 	end
 	
 	return returnString
@@ -50,15 +50,15 @@ function sqlDeleteTables()
 	local returnString = {}
 	
 	if sqlDeleteWeaponsTable() then
-		table.insert(returnString, "--  Table wlc_weapons deleted    --")
+		table.insert(returnString, "Table wlc_weapons deleted")
 	else		
-		table.insert(returnString, "--  Table wlc_weapons not deleted--")
+		table.insert(returnString, "Table wlc_weapons not deleted")
 	end
 	
 	if sqlDeleteLimitsTable() then
-		table.insert(returnString, "--  Table wlc_limits deleted     --")
+		table.insert(returnString, "Table wlc_limits deleted")
 	else		
-		table.insert(returnString, "--  Table wlc_limits not deleted --")
+		table.insert(returnString, "Table wlc_limits not deleted")
 	end
 	
 	return returnString
@@ -73,8 +73,8 @@ function sqlValidateWeaponsTable()
 	
 	query = "PRAGMA table_info(wlc_weapons);"
 	pragmaResult = sql.Query(query)
-	for column in pairs( pragmaResult ) do
-		if column['name'] != "usergroup" and column['name'] != "weapon" then
+	for key, value in pairs( pragmaResult ) do
+		if value['name'] != "usergroup" and value['name'] != "weapon" then
 			return false
 		end
 	end
@@ -91,8 +91,8 @@ function sqlValidateLimitsTable()
 	
 	query = "PRAGMA table_info(wlc_limits);"
 	pragmaResult = sql.Query(query)
-	for column in pairs( pragmaResult ) do
-		if column['name'] != "usergroup" and column['name'] != "convar" and column['name'] != "maxlimit" then
+	for key, value in pairs( pragmaResult ) do
+		if value['name'] != "usergroup" and value['name'] != "convar" and value['name'] != "maxlimit" then
 			return false
 		end
 	end
