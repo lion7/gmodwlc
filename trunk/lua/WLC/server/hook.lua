@@ -45,9 +45,9 @@ function hookInitialize()
 		return lcValidateLimit( ply, "sbox_maxvehicles" )
 	end
 
-	function GAMEMODE:PlayerSpawnSENT( ply, name )
-		return lcValidateLimit( ply, "sbox_maxsents" )
-	end
+	-- function GAMEMODE:PlayerSpawnSENT( ply, name )
+		-- return lcValidateLimit( ply, "sbox_maxsents" )
+	-- end
 
 	function GAMEMODE:PlayerSpawnNPC( ply, npc_type, equipment )
 		return lcValidateLimit( ply, "sbox_maxnpcs" )
