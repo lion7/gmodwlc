@@ -5,6 +5,7 @@
 ]]
 
 
+--- Sends a hint to the player for 10 seconds if WLC is enabled.
 function hookPlayerInitialSpawn( player )
 	if utilEnabled() then		
 		player:SendHint("This server has weapon restrictions in effect.", 10)
@@ -13,7 +14,7 @@ end
 hook.Add( "PlayerInitialSpawn", "wcPlayerInitialSpawn", hookPlayerInitialSpawn )
 
 
---- Returns a boolean.
+--- Validate if the picked up weapon is allowed. Returns a boolean.
 function hookPlayerCanPickupWeapon( player, weapon )
 	if utilEnabled() then
 		if wcValidateWeapon(player, weapon) then
@@ -25,62 +26,31 @@ function hookPlayerCanPickupWeapon( player, weapon )
 end
 hook.Add( "PlayerCanPickupWeapon", "wcPlayerCanPickupWeapon", hookPlayerCanPickupWeapon )
 
+
+--- Add hooks so we can manage limits.
 function hookInitialize()
-	if utilEnabled() then
-		-- ---------------------------------------------------------
-		--   Name: gamemode:PlayerSpawnRagdoll( ply, model )
-		--   Desc: Return true if it's allowed
-		-- ---------------------------------------------------------
-		function GAMEMODE:PlayerSpawnRagdoll( ply, model )
-			return lcValidateLimit( ply, "sbox_maxragdolls" )
-		end
+	function GAMEMODE:PlayerSpawnRagdoll( ply, model )
+		return lcValidateLimit( ply, "sbox_maxragdolls" )
+	end
 
+	function GAMEMODE:PlayerSpawnProp( ply, model )
+		return lcValidateLimit( ply, "sbox_maxprops" )
+	end
 
-		-- ---------------------------------------------------------
-		--   Name: gamemode:PlayerSpawnProp( ply, model )
-		--   Desc: Return true if it's allowed
-		-- ---------------------------------------------------------
-		function GAMEMODE:PlayerSpawnProp( ply, model )
-			return lcValidateLimit( ply, "sbox_maxprops" )
-		end
+	function GAMEMODE:PlayerSpawnEffect( ply, model )
+		return lcValidateLimit( ply, "sbox_maxeffects" )
+	end
 
+	function GAMEMODE:PlayerSpawnVehicle( ply )
+		return lcValidateLimit( ply, "sbox_maxvehicles" )
+	end
 
-		-- ---------------------------------------------------------
-		--   Name: gamemode:PlayerSpawnEffect( ply, model )
-		--   Desc: Return true if it's allowed
-		-- ---------------------------------------------------------
-		function GAMEMODE:PlayerSpawnEffect( ply, model )
-			return lcValidateLimit( ply, "sbox_maxeffects" )
-		end
+	function GAMEMODE:PlayerSpawnSENT( ply, name )
+		return lcValidateLimit( ply, "sbox_maxsents" )
+	end
 
-		-- ---------------------------------------------------------
-		--   Name: gamemode:PlayerSpawnVehicle( ply )
-		--   Desc: Return true if it's allowed
-		-- ---------------------------------------------------------
-		function GAMEMODE:PlayerSpawnVehicle( ply )
-			return lcValidateLimit( ply, "sbox_maxvehicles" )
-		end
-
-		-- ---------------------------------------------------------
-		--   Name: gamemode:PlayerSpawnSENT( ply, name )
-		--   Desc: Return true if player is allowed to spawn the SENT
-		-- ---------------------------------------------------------
-		-- Commented out since it now just always returns true. This may change some day...year...etc
-		-- function GAMEMODE:PlayerSpawnSENT( ply, name )
-		--
-		-- 	return lcValidateLimit( ply, "sbox_maxsents" )
-		--
-		-- end
-		--
-
-		-- ---------------------------------------------------------
-		--   Name: gamemode:PlayerSpawnNPC( ply, npc_type )
-		--   Desc: Return true if player is allowed to spawn the NPC
-		-- ---------------------------------------------------------
-		function GAMEMODE:PlayerSpawnNPC( ply, npc_type, equipment )
-			return lcValidateLimit( ply, "sbox_maxnpcs" )
-		end
+	function GAMEMODE:PlayerSpawnNPC( ply, npc_type, equipment )
+		return lcValidateLimit( ply, "sbox_maxnpcs" )
 	end
 end
-
 hook.Add( "Initialize", "lcInitialize", hookInitialize )
