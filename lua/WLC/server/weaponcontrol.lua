@@ -38,6 +38,18 @@ function wcRestrictWeapon( usergroup, weapon )
 		return returnString
 	end
 	
+	if wcWeaponSupported(weapon) == false then	
+		table.insert(returnString, "Error: Weapon " .. weapon .. " isn't supported (yet)!")
+		table.insert(returnString, "Currently the following weapons are supported:")
+		table.merge(returnString, utilWeaponsList2())
+		return returnString
+	end
+	
+	if sqlSelectWeaponsEntry(usergroup, weapon) != nil then
+		table.insert(returnString, "Error: Usergroup " .. usergroup .. " already has weapon " .. weapon .. " restricted!")
+		return returnString
+	end
+	
 	if sqlWriteWeaponsEntry(usergroup, weapon) then
 		table.insert(returnString, "Restricted weapon " .. weapon .. " for group " .. usergroup .. ".")
 	else
@@ -52,15 +64,15 @@ function wcUnrestrictWeapon( usergroup, weapon )
 	local returnString = {}
 	
 	if sqlSelectWeaponsEntry(usergroup, weapon) == nil then
-		if weapon == nil then
-			table.insert(returnString, "Error: Usergroup " .. usergroup .. " doesn't have any weapon(s) restricted!")
-		else				
+		if weapon != nil then
 			table.insert(returnString, "Error: Usergroup " .. usergroup .. " doesn't have weapon " .. weapon .. " restricted!")
+		else				
+			table.insert(returnString, "Error: Usergroup " .. usergroup .. " doesn't have any weapon(s) restricted!")
 		end
 	end
 	
 	if sqlDeleteWeaponsEntry(usergroup, weapon) then
-		if weapon == nil then
+		if weapon != nil then			
 			table.insert(returnString, "Unrestricted weapon " .. weapon .. " for group " .. usergroup .. ".")
 		else				
 			table.insert(returnString, "Unrestricted all weapons for group " .. usergroup .. ".")
@@ -82,6 +94,17 @@ function wcWeaponExists( weaponClass )
 	end
 	return false
 end
+
+
+--- Validates if a weapon is supported by WLC. Returns a boolean.
+function wcWeaponSupported( weaponClass )
+	if table.HasValue(utilWeaponsList2(), weaponClass) then
+		return true
+	else
+		return false
+	end
+end
+
 
 --- Validates if the specified weapon is allowed for the player's usergroup. Returns a boolean.
 function wcValidateWeapon( player, weapon )

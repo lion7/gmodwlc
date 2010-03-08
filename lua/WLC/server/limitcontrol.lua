@@ -23,6 +23,7 @@ function lcCheckLimits( usergroup )
 	return returnString
 end
 
+
 --- Gives a group a different limit to a specific gmod limit. Returns a string array.
 function lcSetLimit( usergroup, convar, limit )
 	local returnString = {}
@@ -38,6 +39,13 @@ function lcSetLimit( usergroup, convar, limit )
 		return returnString
 	end
 	
+	if lcGmodLimitSupported(convar) == false then
+		table.insert(returnString, "Error: Gmod limit " .. convar .. " isn't supported (yet)!")
+		table.insert(returnString, "Currently the following limits are supported:")
+		table.merge(returnString, utilConvarList())
+		return returnString
+	end
+	
 	if sqlWriteLimitEntry(usergroup, convar, limit) then
 		table.insert(returnString, "Changed limit of gmod limit " .. convar .. " to " .. limit .. " on group " .. usergroup .. ".")
 	else
@@ -46,6 +54,7 @@ function lcSetLimit( usergroup, convar, limit )
 	
 	return returnString
 end
+
 
 --- Removes a gmod limit from a group. Returns a string array.
 function lcRemoveLimit( usergroup, convar )
@@ -57,19 +66,19 @@ function lcRemoveLimit( usergroup, convar )
 	end
 	
 	if sqlSelectLimitEntry(usergroup, convar) == nil then
-		if convar == nil then
-			table.insert(returnString, "Error: Usergroup " .. usergroup .. " doesn't have any limits!")
-		else				
+		if convar != nil then
 			table.insert(returnString, "Error: Usergroup " .. usergroup .. " doesn't have limit " .. convar .. "!")
+		else				
+			table.insert(returnString, "Error: Usergroup " .. usergroup .. " doesn't have any limits!")
 		end
 		return returnString
 	end
 	
 	if sqlDeleteLimitEntry(usergroup, convar) then
-		if convar == nil then
-			table.insert(returnString, "Removed limit all limits from group " .. usergroup .. ".")
-		else
+		if convar != nil then
 			table.insert(returnString, "Removed limit " .. convar .. " from group " .. usergroup .. ".")
+		else
+			table.insert(returnString, "Removed limit all limits from group " .. usergroup .. ".")
 		end
 	else
 		table.insert(returnString, "Error: Unhandled error while removing limit!")
@@ -78,15 +87,27 @@ function lcRemoveLimit( usergroup, convar )
 	return returnString
 end
 
+
 --- Validates if a gmod limit exists. Returns a boolean.
 function lcGmodLimitExists( convar )
 	convarValue = GetConVar(convar)
-	if convarValue == nil then
-		return false
-	else
+	if convarValue != nil then
 		return true
+	else
+		return false
 	end
 end
+
+
+--- Validates if a gmod limit is supported by WLC. Returns a boolean.
+function lcGmodLimitSupported( convar )
+	if table.HasValue(utilConvarList(), convar) then
+		return true
+	else
+		return false
+	end
+end
+
 
 --- Validates if the specified prop is allowed to spawn by the player. Returns a boolean.
 function lcValidateLimit( player, convar )

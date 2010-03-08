@@ -177,10 +177,10 @@ end
 
 --- Returns a sql result.
 function sqlSelectWeaponsEntry(usergroup, weapon)	
-	if convar == nil then
-		query = "SELECT * FROM wlc_weapons WHERE usergroup = '" .. usergroup .. "';"
-	else
+	if weapon != nil then
 		query = "SELECT * FROM wlc_weapons WHERE usergroup = '" .. usergroup .. "' AND weapon = '" .. weapon .. "';"
+	else
+		query = "SELECT * FROM wlc_weapons WHERE usergroup = '" .. usergroup .. "';"
 	end
 	result = sql.Query(query)
 	
@@ -190,7 +190,7 @@ end
 
 --- Returns a boolean.
 function sqlWriteWeaponsEntry(usergroup, weapon)	
-	if sqlSelectWeaponsEntry(usergroup, weapon) == nil then	
+	if sqlSelectWeaponsEntry(usergroup, weapon) == nil then
 		query = "INSERT INTO wlc_weapons( usergroup, weapon ) VALUES ( '" .. usergroup .. "', '" .. weapon .. "' );"
 		sql.Query(query)
 		
@@ -207,10 +207,10 @@ end
 
 --- Returns a boolean.
 function sqlDeleteWeaponsEntry(usergroup, weapon)	
-	if weapon == nil then
-		query = "DELETE FROM wlc_weapons WHERE usergroup = '" .. usergroup .. "';"
-	else
+	if weapon != nil then
 		query = "DELETE FROM wlc_weapons WHERE usergroup = '" .. usergroup .. "' AND weapon = '" .. weapon .. "';"
+	else
+		query = "DELETE FROM wlc_weapons WHERE usergroup = '" .. usergroup .. "';"
 	end
 	sql.Query(query)
 	
@@ -232,10 +232,10 @@ end
 
 --- Returns a sql result.
 function sqlSelectLimitEntry(usergroup, convar)
-	if convar == nil then
-		query = "SELECT * FROM wlc_limits WHERE usergroup = '" .. usergroup .. "';"
-	else
+	if convar != nil then
 		query = "SELECT * FROM wlc_limits WHERE usergroup = '" .. usergroup .. "' AND convar = '" .. convar .. "';"
+	else
+		query = "SELECT * FROM wlc_limits WHERE usergroup = '" .. usergroup .. "';"
 	end
 	result = sql.Query(query)
 	return result
@@ -268,10 +268,10 @@ end
 
 --- Returns a boolean.
 function sqlDeleteLimitEntry(usergroup, convar)
-	if convar == nil then
-		query = "DELETE FROM wlc_limits WHERE usergroup = '" .. usergroup .. "';"
-	else
+	if convar != nil then
 		query = "DELETE FROM wlc_limits WHERE usergroup = '" .. usergroup .. "' AND convar = '" .. convar .. "';"
+	else
+		query = "DELETE FROM wlc_limits WHERE usergroup = '" .. usergroup .. "';"
 	end
 	sql.Query(query)
 	if sqlSelectLimitEntry(usergroup, convar) == nil then
