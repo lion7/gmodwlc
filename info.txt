@@ -1,11 +1,11 @@
 "AddonInfo"
 {
-	"name"				"WLC"
+	"name"				"Lion's Stuff"
 	"version"			"1.0"
-	"up_date"			"2009-12-02"
+	"up_date"			"2010-03-11"
 	"author_name"		"Lion"
 	"author_email"		"lion@leeuwit.nl"
-	"author_url"		"www.leeuwit.nl"
-	"info"				"Weapon and Limit Control"
+	"author_url"		"-"
+	"info"				"Random stuff made by Lion"
 	"override"			"0"
 }
