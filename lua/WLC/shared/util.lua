@@ -4,28 +4,14 @@
 	Holds helpful utility functions.
 ]]
 
---- Returns a boolean.
-function utilEnabled()
-	return GetConVar("wlc_enabled"):GetBool()
-end
-
---- Returns a boolean.
-function utilDefaultAction()
-	return GetConVar("wlc_defaultaction"):GetBool()
-end
-
---- Returns a string array.
-function utilAdminGroups()
-	return string.Explode(",", GetConVar("wlc_admingroups"):GetString())
-end
 
 --- Checks if the player has access to this script. Returns a boolean.
-function utilAdminCheck( player )
-	if player:IsValid() then
-		-- playerTeam = team.GetName(player:Team())
-		for key, value in pairs( utilAdminGroups() ) do
+function utilAdminCheck( ply )
+	if ply:IsValid() then
+		-- playerTeam = team.GetName(ply:Team())
+		for key, value in pairs( convarAdminGroups() ) do
 			-- if playerTeam == value then
-			if player:IsUserGroup(value) then
+			if ply:IsUserGroup(value) then
 				return true
 			end
 		end
@@ -192,17 +178,10 @@ function utilHelp( command )
 end
 
 
---- Copies all entries from t2 to t1. Returns a table.
-function table.merge(t1, t2)
-	if t1 == nil then
-		t1 = {}
-	end
-	
-	if t2 != nil then
-		for k, v in pairs(t2) do 
-			table.insert(t1, v) 
-		end
-	end
-	
-	return t1
-end
+-- function math.round(num, idp)
+  -- if idp and idp>0 then
+    -- local mult = 10^idp
+    -- return math.floor(num * mult + 0.5) / mult
+  -- end
+  -- return math.floor(num + 0.5)
+-- end
