@@ -42,7 +42,7 @@ function lcSetLimit( usergroup, convar, limit )
 	if lcGmodLimitSupported(convar) == false then
 		table.insert(returnString, "Error: Gmod limit " .. convar .. " isn't supported (yet)!")
 		table.insert(returnString, "Currently the following limits are supported:")
-		table.merge(returnString, utilConvarList())
+		table.Add(returnString, utilConvarList())
 		return returnString
 	end
 	
@@ -90,63 +90,72 @@ end
 
 --- Validates if a gmod limit exists. Returns a boolean.
 function lcGmodLimitExists( convar )
-	convarValue = GetConVar(convar)
-	if convarValue != nil then
-		return true
-	else
-		return false
-	end
+	return GetConVar(convar) != nil
 end
 
 
 --- Validates if a gmod limit is supported by WLC. Returns a boolean.
 function lcGmodLimitSupported( convar )
-	if table.HasValue(utilConvarList(), convar) then
-		return true
+	return table.HasValue(utilConvarList(), convar)
+end
+
+
+--- Validates if the specified prop is allowed to spawn by the player. Returns a boolean.
+function lcValidateLimit( ply, convar )
+	if !convarEnabled() then
+		return lcDefaultValidateLimit( ply, convar )
+	end
+	
+	if ply:GetActiveWeapon()['ClassName'] == "gmod_tool" then		
+		if scValidateTool(ply:GetTool()['Mode']) then
+			return lcDefaultValidateLimit( ply, convar )
+		end
+	end
+	
+	if !scValidateTime( ply ) then
+		ply:LimitHit("spawnrate")
+		return false
+	end
+	
+	entityType = string.sub(convar, 9)
+	usergroups = sqlSelectLimitUsergroups()
+	
+	if usergroups != nil then
+		for key, value in pairs( usergroups ) do
+			if team.GetName(ply:Team()) == value['usergroup'] then 
+				limitEntry = sqlSelectLimitEntry(value['usergroup'], convar)
+				
+				if limitEntry != nil then
+					limit = tonumber(limitEntry[1]['maxlimit'])
+
+					if ply:GetCount(entityType) < limit or limit < 0 then 
+						return true
+					else
+						ply:LimitHit(entityType)
+						return false
+					end
+				end
+			end
+		end
+	end
+	
+	if convarDefaultAction() then
+		return lcDefaultValidateLimit( ply, convar )
 	else
+		ply:LimitHit(entityType)
 		return false
 	end
 end
 
 
---- Validates if the specified prop is allowed to spawn by the player. Returns a boolean.
-function lcValidateLimit( player, convar )
-	if player:IsValid() then		
-		entityType = string.sub(convar, 9)
-		usergroups = sqlSelectLimitUsergroups()
-		
-		if usergroups != nil then
-			for key, value in pairs( usergroups ) do
-				if team.GetName(player:Team()) == value['usergroup'] then 
-					limitEntry = sqlSelectLimitEntry(value['usergroup'], convar)
-					
-					if limitEntry != nil then
-						limit = tonumber(limitEntry[1]['maxlimit'])
-
-						if player:GetCount(entityType) < limit or limit < 0 then 
-							return true
-						else
-							player:LimitHit(entityType)
-							return false
-						end
-					end
-				end
-			end
-		end
-		
-		if utilDefaultAction() then
-			defaultlimit = server_settings.Int(convar, 0)
-			if player:GetCount(entityType) < defaultlimit or defaultlimit < 0 then 
-				return true
-			else
-				player:LimitHit(entityType)
-				return false
-			end
-		else
-			player:LimitHit(entityType)
-			return false
-		end
+--- Validates if the specified prop is allowed to spawn by the player, using the global convar limit. Returns a boolean.
+function lcDefaultValidateLimit( ply, convar )
+	entityType = string.sub(convar, 9)
+	defaultlimit = server_settings.Int(convar, 0)
+	if ply:GetCount(entityType) < defaultlimit or defaultlimit < 0 then 
+		return true
 	else
+		ply:LimitHit(entityType)
 		return false
 	end
 end

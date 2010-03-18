@@ -41,7 +41,7 @@ function wcRestrictWeapon( usergroup, weapon )
 	if wcWeaponSupported(weapon) == false then	
 		table.insert(returnString, "Error: Weapon " .. weapon .. " isn't supported (yet)!")
 		table.insert(returnString, "Currently the following weapons are supported:")
-		table.merge(returnString, utilWeaponsList2())
+		table.Add(returnString, utilWeaponsList2())
 		return returnString
 	end
 	
@@ -107,14 +107,14 @@ end
 
 
 --- Validates if the specified weapon is allowed for the player's usergroup. Returns a boolean.
-function wcValidateWeapon( player, weapon )
-	if player:IsValid() then
+function wcValidateWeapon( ply, weapon )
+	if ply:IsValid() then
 		weaponClass = weapon:GetClass()
 		usergroups = sqlSelectWeaponsUsergroups()
 		
 		if usergroups != nil then
 			for key, value in pairs( usergroups ) do
-				if team.GetName(player:Team()) == value['usergroup'] then 
+				if team.GetName(ply:Team()) == value['usergroup'] then 
 					weaponsEntry = sqlSelectWeaponsEntry(value['usergroup'], weaponClass)
 					
 					if weaponsEntry != nil then
@@ -126,7 +126,7 @@ function wcValidateWeapon( player, weapon )
 			end
 		end
 		
-		return utilDefaultAction()
+		return convarDefaultAction()
 	else
 		return false
 	end

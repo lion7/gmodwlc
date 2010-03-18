@@ -6,11 +6,11 @@
 
 
 --- Gets called if an admin typed 'wlc' in the console.
-function concmdWlc( player, command, args )
+function concmdWlc( ply, command, args )
 	local argsCount = table.Count(args)
 	local result = {}
 	
-	if utilAdminCheck(player) == false then
+	if utilAdminCheck(ply) == false then
 		table.insert(result, "You are not allowed to access this command!")
 	elseif argsCount < 1 then	
 		table.insert(result, "Please provide a subcommand!")
@@ -18,15 +18,15 @@ function concmdWlc( player, command, args )
 	else		
 		local subCommand = args[1]
 		
-		if utilEnabled() == false then	
+		if convarEnabled() == false then	
 			table.insert(result, "WLC is disabled!")
 		elseif subCommand == "help" then
 			if(argsCount == 1) then
-				table.merge(result, utilHelp(nil))
+				table.Add(result, utilHelp(nil))
 			elseif(argsCount > 2) then
 				table.insert(result, "Error: Too much arguments!")
 			elseif(argsCount == 2) then	
-				table.merge(result, utilHelp(args[2]))
+				table.Add(result, utilHelp(args[2]))
 			else
 				table.insert(result, "Error: Unhandled error!")
 			end
@@ -37,8 +37,8 @@ function concmdWlc( player, command, args )
 				table.insert(result, "Error: Too much arguments!")
 			elseif(argsCount == 2) then	
 				if utilTeamExists(args[2]) then
-					table.merge(result, wcCheckWeapons(args[2]))
-					table.merge(result, lcCheckLimits(args[2]))
+					table.Add(result, wcCheckWeapons(args[2]))
+					table.Add(result, lcCheckLimits(args[2]))
 				else
 					table.insert(result, "Error: Usergroup " .. args[2] .. " doesn't exist!")
 				end
@@ -53,7 +53,7 @@ function concmdWlc( player, command, args )
 			elseif(argsCount > 3) then
 				table.insert(result, "Error: Too much arguments!")
 			elseif(argsCount == 3) then	
-				table.merge(result, wcRestrictWeapon(args[2], args[3]))
+				table.Add(result, wcRestrictWeapon(args[2], args[3]))
 			else
 				table.insert(result, "Error: Unhandled error!")
 			end
@@ -63,9 +63,9 @@ function concmdWlc( player, command, args )
 			elseif(argsCount > 3) then
 				table.insert(result, "Error: Too much arguments!")
 			elseif(argsCount == 2) then	
-				table.merge(result, wcUnrestrictWeapon(args[2], nil))
+				table.Add(result, wcUnrestrictWeapon(args[2], nil))
 			elseif(argsCount == 3) then	
-				table.merge(result, wcUnrestrictWeapon(args[2], args[3]))
+				table.Add(result, wcUnrestrictWeapon(args[2], args[3]))
 			else
 				table.insert(result, "Error: Unhandled error!")
 			end
@@ -79,7 +79,7 @@ function concmdWlc( player, command, args )
 			elseif(argsCount > 4) then
 				table.insert(result, "Error: Too much arguments!")
 			elseif(argsCount == 4) then	
-				table.merge(result, lcSetLimit(args[2], args[3], args[4]))
+				table.Add(result, lcSetLimit(args[2], args[3], args[4]))
 			else
 				table.insert(result, "Error: Unhandled error!")
 			end
@@ -89,17 +89,17 @@ function concmdWlc( player, command, args )
 			elseif(argsCount > 3) then
 				table.insert(result, "Error: Too much arguments!")
 			elseif(argsCount == 2) then
-				table.merge(result, lcRemoveLimit(args[2], nil))
+				table.Add(result, lcRemoveLimit(args[2], nil))
 			elseif(argsCount == 3) then
-				table.merge(result, lcRemoveLimit(args[2], args[3]))
+				table.Add(result, lcRemoveLimit(args[2], args[3]))
 			else
 				table.insert(result, "Error: Unhandled error!")
 			end
 		elseif subCommand == "cleardb" then
 			if(argsCount == 1) then
-				table.merge(result, sqlDeleteTables())
-				table.merge(result, sqlCreateTables())
-				table.merge(result, sqlValidateTables())
+				table.Add(result, sqlDeleteTables())
+				table.Add(result, sqlCreateTables())
+				table.Add(result, sqlValidateTables())
 			else
 				table.insert(result, "Error: Unhandled error!")
 			end
@@ -108,19 +108,19 @@ function concmdWlc( player, command, args )
 		end
 	end
 	
-	if player:IsValid() then
+	if ply:IsValid() then
 		if result != nil then
 			if subCommand != "help" then
-				print("\nAction(s) by " .. player:Name() .. ":")
+				print("\nAction(s) by " .. ply:Name() .. ":")
 			end
 			for key, value in pairs( result ) do
-				player:PrintMessage(HUD_PRINTCONSOLE, value)
+				ply:PrintMessage(HUD_PRINTCONSOLE, value)
 				if subCommand != "help" then
 					print(value)
 				end
 			end
 		else
-			player:PrintMessage(HUD_PRINTCONSOLE, "Error: No output returned.")
+			ply:PrintMessage(HUD_PRINTCONSOLE, "Error: No output returned.")
 		end
 	else
 		if result != nil then
