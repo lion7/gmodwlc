@@ -4,7 +4,7 @@
 function lsWarningRestart()
 	message = "This server will automatically restart in 5 minutes for a routine cleanup. Please save your work and rejoin when the server is restarted. Thank you for your patience and have a nice time playing."
 	for key, value in pairs(player.GetAll()) do
-		value:PrintMessage( HUD_PRINTCENTER, message )
+		value:PrintMessage( HUD_PRINTTALK , message )
 	end
 	timer.Simple( 300, lsExecuteRestart )
 end
