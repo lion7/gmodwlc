@@ -26,9 +26,9 @@ end
 -----------------------------------------------------------------------
 -- Warning & action of first restart at 4:35 am -----------------------
 -----------------------------------------------------------------------
-lsSheduleRestart(lsWarningRestart, 4,30,00)
+-- lsSheduleRestart(lsWarningRestart, 4,30,00)
 
 -----------------------------------------------------------------------
 -- Warning & action of second restart at 2:35 pm ----------------------
 -----------------------------------------------------------------------
-lsSheduleRestart(lsWarningRestart, 14,30,00)
+-- lsSheduleRestart(lsWarningRestart, 14,30,00)
