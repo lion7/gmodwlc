@@ -1,39 +1,24 @@
 -----------------------------------------------------------------------
 --The fuction to restart the server------------------------------------
 -----------------------------------------------------------------------
-local function restart
-RunConsoleCommand("map", game.GetMap())
+function lsRestart()
+	RunConsoleCommand("map", game.GetMap())
 end
 
-
-
-
------------------------------------------------------------------------
---Warning & action of first restart at 2:35 pm ------------------------
------------------------------------------------------------------------
-
-local function shedule1
-MsgAll("Hello, it's 2:30pm. This server will automaticly restart in 5  minutes (2:35pm) for a routine cleanup. 
-Please save your work and rejoin when the server is back up, Thank you")
+function lsShedule()
+	MsgAll("This server will automatically restart in 5 minutes for a routine cleanup. Please save your work and rejoin when the server is restarted. Thank you for your patience and have a nice time playing.")
+	timer.Simple( 300, lsRestart )
 end
 
-
-schedule.Add("Warning1", shedule1, 00, 30, 14, "nil", nil, nil, nil)
-
-schedule.Add("Restart", restart, 00, 35, 14, "nil", nil, nil, nil)
-
-
-
+-----------------------------------------------------------------------
+-- Warning & action of first restart at 4:35 am -----------------------
+-----------------------------------------------------------------------
+schedule.Add("cleanup", lsShedule, 00, 30, 4, nil, nil, nil, nil)
 
 -----------------------------------------------------------------------
---Warning & action of second restart at 4:35 am -----------------------
+-- Warning & action of second restart at 2:35 pm ----------------------
 -----------------------------------------------------------------------
+schedule.Add("cleanup", lsShedule, 00, 30, 14, nil, nil, nil, nil)
 
-local function shedule2
- MsgAll("Hello, it's 4:30am. This server will automaticly restart in 5  minutes (4:35am) for a routine cleanup. 
-Please save your work and rejoin when the server is back up, Thank you")
-end
- 
-
-schedule.Add("Warning2", shedule2, 00, 30, 4, "nil", nil, nil, nil)
-schedule.Add("Restart", restart, 00, 35, 4, "nil", nil, nil, nil)
+-- Test
+schedule.Add("cleanup", lsShedule, 00, 30, 16, nil, nil, nil, nil)
