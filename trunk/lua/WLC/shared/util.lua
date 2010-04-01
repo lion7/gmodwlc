@@ -92,7 +92,7 @@ end
 
 
 --- Returns a string array with all supported weapon classnames.
-function utilWeaponsList2()
+function utilWeaponsListSupported()
 	local weaponsList = {}
 	table.insert(weaponsList, "weapon_crowbar")
 	table.insert(weaponsList, "weapon_physcannon")
@@ -112,7 +112,7 @@ end
 
 
 --- Returns a string array with a list of convars.
-function utilConvarList()
+function utilConvarListSupportedSupported()
 	local convarList = {}
 	table.insert(convarList, "sbox_maxeffects")
 	table.insert(convarList, "sbox_maxnpcs")

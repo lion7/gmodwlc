@@ -42,7 +42,7 @@ function lcSetLimit( usergroup, convar, limit )
 	if lcGmodLimitSupported(convar) == false then
 		table.insert(returnString, "Error: Gmod limit " .. convar .. " isn't supported (yet)!")
 		table.insert(returnString, "Currently the following limits are supported:")
-		table.Add(returnString, utilConvarList())
+		table.Add(returnString, utilConvarListSupported())
 		return returnString
 	end
 	
@@ -96,7 +96,7 @@ end
 
 --- Validates if a gmod limit is supported by WLC. Returns a boolean.
 function lcGmodLimitSupported( convar )
-	return table.HasValue(utilConvarList(), convar)
+	return table.HasValue(utilConvarListSupported(), convar)
 end
 
 

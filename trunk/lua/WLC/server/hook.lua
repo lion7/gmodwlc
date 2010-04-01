@@ -31,7 +31,7 @@ function hookPlayerCanPickupWeapon( ply, weapon )
 	end
 end
 hook.Add( "PlayerCanPickupWeapon", "wcPlayerCanPickupWeapon", hookPlayerCanPickupWeapon )
-hook.Add( "PlayerGiveSWEP", "wcPlayerGiveSWEP", hookPlayerCanPickupWeapon )
+-- hook.Add( "PlayerGiveSWEP", "wcPlayerGiveSWEP", hookPlayerCanPickupWeapon )
 
 
 --- Add hooks so we can manage limits.
@@ -41,6 +41,10 @@ function hookInitialize()
 	end
 
 	function GAMEMODE:PlayerSpawnProp( ply, model )
+		if not utilAdminCheck(ply) and model == "models/props_c17/oildrum001_explosive.mdl" then
+			ply:LimitHit("Explosive Barrel")
+			return false
+		end
 		return lcValidateLimit( ply, "sbox_maxprops" )
 	end
 
