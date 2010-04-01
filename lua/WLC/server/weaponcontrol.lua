@@ -41,7 +41,7 @@ function wcRestrictWeapon( usergroup, weapon )
 	if wcWeaponSupported(weapon) == false then	
 		table.insert(returnString, "Error: Weapon " .. weapon .. " isn't supported (yet)!")
 		table.insert(returnString, "Currently the following weapons are supported:")
-		table.Add(returnString, utilWeaponsList2())
+		table.Add(returnString, utilWeaponsListSupported())
 		return returnString
 	end
 	
@@ -98,7 +98,7 @@ end
 
 --- Validates if a weapon is supported by WLC. Returns a boolean.
 function wcWeaponSupported( weaponClass )
-	if table.HasValue(utilWeaponsList2(), weaponClass) then
+	if table.HasValue(utilWeaponsListSupported(), weaponClass) then
 		return true
 	else
 		return false
