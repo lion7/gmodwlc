@@ -112,7 +112,7 @@ end
 
 
 --- Returns a string array with a list of convars.
-function utilConvarListSupportedSupported()
+function utilConvarListSupported()
 	local convarList = {}
 	table.insert(convarList, "sbox_maxeffects")
 	table.insert(convarList, "sbox_maxnpcs")
