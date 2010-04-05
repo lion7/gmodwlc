@@ -26,7 +26,7 @@ if ( CLIENT ) then
 	
 end
 
-local boomer_magnitude = CreateConVar( "boomer_magnitude", "300", { FCVAR_REPLICATED, FCVAR_NOTIFY } )
+CreateConVar( "boomer_magnitude", "300", { FCVAR_REPLICATED, FCVAR_NOTIFY } )
 
 SWEP.Category = "Lion's SWEPS"
  
@@ -50,11 +50,6 @@ SWEP.Primary.Delay 			= 1 							--this sets the delay for the next primary fire
 SWEP.Primary.DefaultClip 	= 12
 SWEP.Primary.Automatic 		= false
 SWEP.Primary.Ammo 			= "357"
-
-SWEP.ExplosionMagnitude 	= boomer_magnitude:GetInt()		--the magnitude of the explosion
-SWEP.ExplosionSound 		= Sound("")						--the sound for the explosion
-SWEP.ExplosionSoundVolume 	= boomer_magnitude:GetInt()	* 3 --how hard it can be heard
-SWEP.ExplosionSoundDistance = boomer_magnitude:GetInt()	* 2	-- how far away it can be heard
 
 SWEP.Secondary.ClipSize		= -1
 SWEP.Secondary.DefaultClip	= -1
@@ -104,24 +99,21 @@ function SWEP:PrimaryAttack()
 	-- Make sure we can shoot first
 	if ( !self:CanPrimaryAttack() ) then return end
  
-	local eyetrace = nil
-	eyetrace = self.Owner:GetEyeTrace()
+	local eyetrace = self.Owner:GetEyeTrace()
 	-- this gets where you are looking. The SWEP is making an explosion where you are LOOKING, right?
  
 	self.Weapon:EmitSound ( self.PrimarySound )
 	-- this makes the sound, which I specified earlier in the code
  
-	self.Weapon:SendWeaponAnim( ACT_VM_PRIMARYATTACK )
+	self:ShootEffects()
 	--this makes the shooting animation for the 357
  
-	local explode = nil
-	explode = ents.Create("env_explosion") --creates the explosion
-	explode:SetPos( eyetrace.HitPos ) --this creates the explosion where you were looking
-	--explode:SetPhysicsAttacker( self.Owner ) -- this sets you as the person who made the explosion
-	explode:Spawn() --this actually spawns the explosion
-	explode:SetKeyValue( "iMagnitude", self.ExplosionMagnitude ) --the magnitude of the explosion
-	explode:Fire( "Explode", "", 0 )
-	explode:EmitSound( self.ExplosionSound, self.ExplosionSoundVolume, self.ExplosionSoundDistance ) --the sound for the explosion, and how far away it can be heard
+	local explode = ents.Create("env_explosion")
+	explode:SetPos( eyetrace.HitPos )
+	explode:SetOwner( self.Owner )
+	explode:Spawn()
+	explode:SetKeyValue("iMagnitude",GetConVar("boomer_magnitude"):GetInt())
+	explode:EmitSound( Sound(""), GetConVar("boomer_magnitude"):GetInt() * 2, GetConVar("boomer_magnitude"):GetInt() * 3 ) --the sound for the explosion, and how hard it is heard and how far away it can be heard
  
 	self.Weapon:SetNextPrimaryFire( CurTime() + self.Primary.Delay ) --this sets the delay for the next primary fire.
  
