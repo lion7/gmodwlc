@@ -1,4 +1,3 @@
 Name: WLC - Weapon and Limit Control
 Author: Lion
-Description: 
-Configuration: 
+Note: Atm WLC will not work if uteam is not installed.
