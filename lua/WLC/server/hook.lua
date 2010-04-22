@@ -41,10 +41,10 @@ function hookInitialize()
 	end
 
 	function GAMEMODE:PlayerSpawnProp( ply, model )
-		-- if not utilAdminCheck(ply) and (model == "models/props_c17/oildrum001_explosive.mdl" or model == "models/props/de_train/biohazardtank.mdl") then
-			-- ply:LimitHit("Explosive Barrel")
-			-- return false
-		-- end
+		if not utilAdminCheck(ply) and (model == "models/props_c17/oildrum001_explosive.mdl" or model == "models/props/de_train/biohazardtank.mdl") then
+			ply:LimitHit("Explosive Barrel")
+			return false
+		end
 		return lcValidateLimit( ply, "sbox_maxprops" )
 	end
 
