@@ -1,5 +1,5 @@
 CreateConVar( "wlc_defaultaction", "1", { FCVAR_NOTIFY, FCVAR_ARCHIVE } )
-CreateConVar( "wlc_spawnrate", "0.1", { FCVAR_NOTIFY, FCVAR_ARCHIVE } )
+CreateConVar( "wlc_spawnrate", "100", { FCVAR_NOTIFY, FCVAR_ARCHIVE } )
 
 
 --- Returns a boolean.
@@ -10,5 +10,5 @@ end
 
 --- Returns an integer.
 function convarSpawnRate()
-	return GetConVar("wlc_spawnrate"):GetFloat()
+	return GetConVar("wlc_spawnrate"):GetInt()
 end

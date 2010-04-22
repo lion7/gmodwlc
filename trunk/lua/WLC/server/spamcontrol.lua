@@ -19,8 +19,7 @@ end
 
 --- Adds a player to the scTable.
 function scAddPlayer( ply )
-	realTime = RealTime()
-	scTable[ply] = realTime
+	scTable[ply] = MilliTime()
 end
 
 
@@ -32,11 +31,16 @@ end
 
 --- Validates if the player is allowed to spawn another object. Returns a boolean.
 function scValidateTime( ply )
-	realTime = RealTime()
-	if (scTable[ply] + convarSpawnRate()) < realTime then
-		scTable[ply] = realTime
+	milliTime = MilliTime()
+	if (scTable[ply] + convarSpawnRate()) < milliTime then
+		scTable[ply] = milliTime
 		return true
 	else
 		return false
 	end
+end
+
+
+function MilliTime()
+	return math.floor( RealTime() * 1000 + 0.5)
 end
