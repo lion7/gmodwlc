@@ -1,15 +1,34 @@
 -----------------------------------------------------------------------
 --The fuction to restart the server------------------------------------
 -----------------------------------------------------------------------
+local timerStage = 12
 function lsWarningRestart()
-	message = "This server will automatically restart in 5 minutes for a routine cleanup. Please save your work and rejoin when the server is restarted. Thank you for your patience and have a nice time playing."
-	for key, value in pairs(player.GetAll()) do
-		value:PrintMessage( HUD_PRINTTALK , message )
+	timerStage = timerStage - 1
+	if timerStage == 12 then
+		message = "This server will automatically restart in 5 minutes for a routine cleanup. Please save your work and rejoin when the server is restarted. Thank you for your patience and have a nice time playing."
+		for key, value in pairs(player.GetAll()) do
+			value:PrintMessage( HUD_PRINTTALK , message )
+		end
+		timer.Simple( 240, lsWarningRestart )
+	elseif timerStage = 11 then
+		message = "This server will automatically restart in 1 minute for a routine cleanup. Please save your work and rejoin when the server is restarted. Thank you for your patience and have a nice time playing."
+		for key, value in pairs(player.GetAll()) do
+			value:PrintMessage( HUD_PRINTTALK , message )
+		end
+		timer.Simple( 50, lsWarningRestart )
+	elseif timerStage == 0 then
+		lsExecuteRestart()
+	elseif timerStage <= 10 then
+		message = "Server restart in " .. timerStage .. " seconds."
+		for key, value in pairs(player.GetAll()) do
+			value:PrintMessage( HUD_PRINTTALK , message )
+		end
+		timer.Simple( 1, lsWarningRestart )
 	end
-	timer.Simple( 300, lsExecuteRestart )
 end
 
 function lsExecuteRestart()
+	timerStage = 12
 	RunConsoleCommand("map", "gm_construct_flatgrass_v5")
 	--RunConsoleCommand("map", game.GetMap())
 end
