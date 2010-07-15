@@ -10,14 +10,12 @@ function hookPlayerInitialSpawn( ply )
 	if convarEnabled() then
 		ply:SendHint("This server has weapon restrictions in effect.", 10)
 	end
-	scAddPlayer( ply )
 end
 hook.Add( "PlayerInitialSpawn", "wcPlayerInitialSpawn", hookPlayerInitialSpawn )
 
 
 --- Calls lcSpamProt_RemovePlayer.
 function hookPlayerDisconnected( ply )
-	scRemovePlayer( ply )	
 end
 hook.Add( "PlayerDisconnected", "wcPlayerDisconnected", hookPlayerDisconnected )
 

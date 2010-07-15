@@ -106,17 +106,6 @@ function lcValidateLimit( ply, convar )
 		return lcDefaultValidateLimit( ply, convar )
 	end
 	
-	if ply:GetActiveWeapon()['ClassName'] == "gmod_tool" then		
-		if scValidateTool(ply:GetTool()['Mode']) then
-			return lcDefaultValidateLimit( ply, convar )
-		end
-	end
-	
-	if !scValidateTime( ply ) then
-		ply:LimitHit("spawnrate")
-		return false
-	end
-	
 	entityType = string.sub(convar, 9)
 	usergroups = sqlSelectLimitUsergroups()
 	
