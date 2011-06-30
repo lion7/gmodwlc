@@ -103,6 +103,12 @@ function concmdWlc( ply, command, args )
 			else
 				table.insert(result, "Error: Unhandled error!")
 			end
+		elseif subCommand == "gui" then
+			if(argsCount == 1) then
+				table.insert(result, "This command is available client-side only!")
+			else
+				table.insert(result, "Error: Unhandled error!")
+			end
 		else
 			table.insert(result, "Error: Invalid subcommand!")
 		end

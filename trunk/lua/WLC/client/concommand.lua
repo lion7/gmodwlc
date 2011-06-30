@@ -5,8 +5,8 @@
 ]]
  
 
---- Gets called if an admin typed 'wlcgui' in the console.
-function concmdWlcGui( ply, command, args )
+--- Gets called if an admin typed 'wlc' in the console.
+function concmdWlc( ply, command, args )
 	if convarEnabled() then
 		if utilAdminCheck( ply ) == true then
 			local dermaPanel = vgui.Create( "DFrame" ) -- Creates the frame itself			
@@ -158,4 +158,4 @@ function concmdWlcGui( ply, command, args )
 	end
 end
 
-concommand.Add( "wlcgui", concmdWlcGui )
+concommand.Add( "wlc", concmdWlc )
