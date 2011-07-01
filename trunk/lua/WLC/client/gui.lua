@@ -1,18 +1,18 @@
 --[[
-	Title: Concommand
+	Title: GUI
 
-	Holds console commands and their functions.
+	Holds the GUI.
 ]]
  
 
---- Gets called if an admin typed 'wlc' in the console.
-function concmdWlc( ply, command, args )
+--- Gets called by the server if someone typed 'rcon wlc gui' in the console.
+function wlcGUI( ply, command, args )
 	if convarEnabled() then
 		if utilAdminCheck( ply ) == true then
 			local dermaPanel = vgui.Create( "DFrame" ) -- Creates the frame itself			
 			local button = vgui.Create( "DButton", dermaPanel )
 			local numSlider = vgui.Create( "DNumSlider", dermaPanel )
-			local usergroupListView = vgui.Create( "DListView", dermaPanel )
+			local groupListView = vgui.Create( "DListView", dermaPanel )
 			local dataListView = vgui.Create( "DListView", dermaPanel )
 			local dataListView_Column = dataListView:AddColumn( " " )
 			local limitButton = vgui.Create( "DButton", dermaPanel )
@@ -41,40 +41,40 @@ function concmdWlc( ply, command, args )
 			button:SetText( "Apply" )
 			button.DoClick = function( button )
 				if limitButton:GetDisabled() == true then
-					for key1, value1 in pairs( usergroupListView:GetSelected() ) do
+					for key1, value1 in pairs( groupListView:GetSelected() ) do
 						for key2, value2 in pairs( dataListView:GetSelected() ) do
-							RunConsoleCommand( "wlc", "setlimit", value1:GetValue(1), value2:GetValue(1), numSlider:GetValue() )
+							RunConsoleCommand( "rcon", "wlc", "setlimit", value1:GetValue(1), value2:GetValue(1), numSlider:GetValue() )
 						end
 					end
 				elseif restrictWeaponButton:GetDisabled() == true then
-					for key1, value1 in pairs( usergroupListView:GetSelected() ) do
+					for key1, value1 in pairs( groupListView:GetSelected() ) do
 						for key2, value2 in pairs( dataListView:GetSelected() ) do
-							RunConsoleCommand( "wlc", "restrictweapon", value1:GetValue(1), value2:GetValue(1) )
+							RunConsoleCommand( "rcon", "wlc", "restrictweapon", value1:GetValue(1), value2:GetValue(1) )
 						end
 					end
 				elseif unrestrictWeaponButton:GetDisabled() == true then
-					for key1, value1 in pairs( usergroupListView:GetSelected() ) do
+					for key1, value1 in pairs( groupListView:GetSelected() ) do
 						for key2, value2 in pairs( dataListView:GetSelected() ) do
-							RunConsoleCommand( "wlc", "unrestrictweapon", value1:GetValue(1), value2:GetValue(1) )
+							RunConsoleCommand( "rcon", "wlc", "unrestrictweapon", value1:GetValue(1), value2:GetValue(1) )
 						end
 					end
 				end
 			end
 			button:SetDisabled( true )
 			
-			usergroupListView:SetPos( 25, 100 )
-			usergroupListView:SetSize( 475, 500 )
-			usergroupListView:SetMultiSelect( true )
-			usergroupListView:AddColumn( "Usergroup(s)" )
-			for key, value in pairs( utilTeamsList() ) do
-				usergroupListView:AddLine( value['Name'] )
+			groupListView:SetPos( 25, 100 )
+			groupListView:SetSize( 475, 500 )
+			groupListView:SetMultiSelect( true )
+			groupListView:AddColumn( "Group(s)" )
+			for key, value in pairs( utilGroupsList() ) do
+				groupListView:AddLine( value )
 			end
-			usergroupListView:SetSortable( true )
-			usergroupListView.OnRowSelected = function( panel, line )
-				if limitButton:GetDisabled() == true and usergroupListView:GetSelected() != nil and dataListView:GetSelected() != nil then
+			groupListView:SetSortable( true )
+			groupListView.OnRowSelected = function( panel, line )
+				if limitButton:GetDisabled() == true and groupListView:GetSelected() != nil and dataListView:GetSelected() != nil then
 					numSlider:SetVisible( true )
 					button:SetDisabled( false )
-				elseif usergroupListView:GetSelected() != nil and dataListView:GetSelected() != nil then
+				elseif groupListView:GetSelected() != nil and dataListView:GetSelected() != nil then
 					numSlider:SetVisible( false )
 					button:SetDisabled( false )
 				else
@@ -88,10 +88,10 @@ function concmdWlc( ply, command, args )
 			dataListView:SetMultiSelect( true )
 			dataListView:SetSortable( true )
 			dataListView.OnRowSelected = function( panel, line )
-				if limitButton:GetDisabled() == true and usergroupListView:GetSelected() != nil and dataListView:GetSelected() != nil then
+				if limitButton:GetDisabled() == true and groupListView:GetSelected() != nil and dataListView:GetSelected() != nil then
 					numSlider:SetVisible( true )
 					button:SetDisabled( false )
-				elseif usergroupListView:GetSelected() != nil and dataListView:GetSelected() != nil then
+				elseif groupListView:GetSelected() != nil and dataListView:GetSelected() != nil then
 					numSlider:SetVisible( false )
 					button:SetDisabled( false )
 				else
@@ -157,5 +157,3 @@ function concmdWlc( ply, command, args )
 		print("WLC is disabled!")
 	end
 end
-
-concommand.Add( "wlc", concmdWlc )
