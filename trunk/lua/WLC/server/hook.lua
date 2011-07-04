@@ -5,16 +5,16 @@
 ]]
 
 
---- Sends a hint to the player for 10 seconds if WLC is enabled. Also calls lcSpamProt_AddPlayer.
+--- Sends a hint to the player for 10 seconds if WLC is enabled. Also calls (function for spamcontrol).
 function hookPlayerInitialSpawn( ply )
 	if convarEnabled() then
-		ply:SendHint("This server has weapon restrictions in effect.", 10)
+		ply:SendHint("This server has Weapon and Limit Control in effect.", 10)
 	end
 end
 hook.Add( "PlayerInitialSpawn", "wlcPlayerInitialSpawn", hookPlayerInitialSpawn )
 
 
---- Calls lcSpamProt_RemovePlayer.
+--- Calls (function for spamcontrol).
 function hookPlayerDisconnected( ply )
 end
 hook.Add( "PlayerDisconnected", "wlcPlayerDisconnected", hookPlayerDisconnected )
@@ -36,54 +36,50 @@ hook.Add( "PlayerCanPickupWeapon", "wlcPlayerCanPickupWeapon", hookPlayerCanPick
 function hookInitialize()
 	function GAMEMODE:PlayerSpawnRagdoll( ply, model )
 		if spamValidate( ply ) then
+			return limitValidate( ply, "sbox_maxragdolls" )
+		else
 			return false
 		end
-		
-		return limitValidate( ply, "sbox_maxragdolls" )
 	end
 
 	function GAMEMODE:PlayerSpawnProp( ply, model )
 		if spamValidate( ply ) then
+			return limitValidate( ply, "sbox_maxprops" )
+		else
 			return false
 		end
-		
-		if not utilAdminCheck(ply) and (model == "models/props_c17/oildrum001_explosive.mdl" or model == "models/props/de_train/biohazardtank.mdl") then
-			ply:LimitHit("Explosive Barrel")
-			return false
-		end
-		return limitValidate( ply, "sbox_maxprops" )
 	end
 
 	function GAMEMODE:PlayerSpawnEffect( ply, model )
 		if spamValidate( ply ) then
+			return limitValidate( ply, "sbox_maxeffects" )
+		else
 			return false
 		end
-		
-		return limitValidate( ply, "sbox_maxeffects" )
 	end
 
 	function GAMEMODE:PlayerSpawnVehicle( ply )
 		if spamValidate( ply ) then
+			return limitValidate( ply, "sbox_maxvehicles" )
+		else
 			return false
 		end
-		
-		return limitValidate( ply, "sbox_maxvehicles" )
 	end
 
 	-- function GAMEMODE:PlayerSpawnSENT( ply, name )
 		-- if spamValidate( ply ) then
+			-- return limitValidate( ply, "sbox_maxsents" )
+		-- else
 			-- return false
 		-- end
-		
-		-- return limitValidate( ply, "sbox_maxsents" )
 	-- end
 
 	function GAMEMODE:PlayerSpawnNPC( ply, npc_type, equipment )
 		if spamValidate( ply ) then
+			return limitValidate( ply, "sbox_maxnpcs" )
+		else
 			return false
 		end
-		
-		return limitValidate( ply, "sbox_maxnpcs" )
 	end
 end
 hook.Add( "Initialize", "wlcInitialize", hookInitialize )

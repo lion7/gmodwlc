@@ -6,7 +6,7 @@
 
 
 --- Checks if the input has the correct format. Returns a table with error messages or nil if the input is correct.
-function checkInput( ply, command, args )
+function inputCheck( ply, command, args )
 	local result = {}
 	local argsCount = table.Count(args)
 	
@@ -22,15 +22,15 @@ function checkInput( ply, command, args )
 			if argsCount > 2 then
 				table.insert(result, "Error - Too much arguments!")
 			elseif argsCount == 1 then	
-				table.Add(result, utilHelp(ply, nil))
+				table.Add(result, utilHelp(nil))
 			elseif argsCount == 2 then	
-				table.Add(result, utilHelp(ply, args[2]))
+				table.Add(result, utilHelp(args[2]))
 			else
 				table.insert(result, "Error - Unhandled error!")
 			end
 		elseif subCommand == "check" then
 			if argsCount == 1 then
-				table.insert(result, "Please provide a group to check for weapon restrictions and limits!")
+				table.insert(result, "Please provide a group to check the weapon(s) and limit(s) listed!")
 			elseif argsCount == 2 then
 				if not utilGroupExists(args[2]) then
 					table.insert(result, "Error - Usergroup " .. args[2] .. " doesn't exist!")
@@ -40,11 +40,11 @@ function checkInput( ply, command, args )
 			else
 				table.insert(result, "Unhandled error!")
 			end
-		elseif subCommand == "restrictweapon" then
+		elseif subCommand == "addweapon" then
 			if argsCount == 1 then
-				table.insert(result, "Please provide a group to restrict a weapon!")
+				table.insert(result, "Please provide a group!")
 			elseif argsCount == 2 then
-				table.insert(result, "Please provide a weapon to restrict!")
+				table.insert(result, "Please provide a weapon to add!")
 			elseif argsCount == 3 then
 				if not utilGroupExists(args[2]) then
 					table.insert(result, "Error - Usergroup " .. args[2] .. " doesn't exist!")
@@ -53,16 +53,16 @@ function checkInput( ply, command, args )
 				elseif utilWeaponSupported(args[3]) == false then
 					table.insert(result, "Error - Weapon " .. args[3] .. " isn't supported (yet)!")
 					table.insert(result, "Currently the following weapons are supported:")
-					table.Add(result, utilWeaponsListSupported())
+					table.Add(result, utilWeaponListSupported())
 				end
 			elseif argsCount > 3 then
 				table.insert(result, "Error - Too much arguments!")
 			else
 				table.insert(result, "Error - Unhandled error!")
 			end
-		elseif subCommand == "unrestrictweapon" then					
+		elseif subCommand == "removeweapon" then					
 			if argsCount == 1 then
-				table.insert(result, "Please provide a group to unrestrict all weapons, or an group and a weapon to unrestrict that weapon!")
+				table.insert(result, "Please provide a group to remove all weapons, or an group and a weapon to remove that weapon!")
 			elseif argsCount > 3 then
 				table.insert(result, "Error - Too much arguments!")
 			elseif argsCount == 2 then
@@ -77,7 +77,7 @@ function checkInput( ply, command, args )
 				elseif utilWeaponSupported(args[3]) == false then
 					table.insert(result, "Error - Weapon " .. args[3] .. " isn't supported (yet)!")
 					table.insert(result, "Currently the following weapons are supported:")
-					table.Add(result, utilWeaponsListSupported())
+					table.Add(result, utilWeaponListSupported())
 				end
 			else
 				table.insert(result, "Error - Unhandled error!")

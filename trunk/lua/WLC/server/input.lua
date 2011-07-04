@@ -6,7 +6,7 @@
 
 
 --- Checks if the player is allowed to use WLC and handles the subcommand. The input should've been already checked by using 'checkInput'.
-function handleInput( ply, command, args ) 
+function inputHandle( ply, command, args ) 
 	local result = {}
 	
 	if command != "wlc" then
@@ -16,20 +16,18 @@ function handleInput( ply, command, args )
 	else
 		local subCommand = args[1]
 		
-		if convarEnabled() == false then	
-			table.insert(result, "WLC is disabled!")
-		elseif subCommand == "check" then
+		if subCommand == "check" then
 			table.Add(result, weaponCheck(args[2]))
 			table.Add(result, limitCheck(args[2]))
-		elseif subCommand == "restrictweapon" then
-			table.Add(result, weaponRestrict(args[2], args[3]))
-		elseif subCommand == "unrestrictweapon" then		
+		elseif subCommand == "addweapon" then
+			table.Add(result, weaponAdd(args[2], args[3]))
+		elseif subCommand == "removeweapon" then		
 			local argsCount = table.Count(args)		
 			
 			if(argsCount == 2) then	
-				table.Add(result, weaponUnrestrict(args[2], nil))
+				table.Add(result, weaponRemove(args[2], nil))
 			elseif(argsCount == 3) then	
-				table.Add(result, weaponUnrestrict(args[2], args[3]))
+				table.Add(result, weaponRemove(args[2], args[3]))
 			end
 		elseif subCommand == "setlimit" then			
 			table.Add(result, limitSet(args[2], args[3], args[4]))
@@ -68,7 +66,7 @@ function handleInput( ply, command, args )
 			
 			table.Add(result, sqlValidateTables())
 		elseif subCommand == "gui" then
-			result = { ["action"]=="wlcGuiShow" }
+			ply:SendLua("wlcGuiShow()")
 		end
 	end
 	
