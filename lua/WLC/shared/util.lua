@@ -5,56 +5,35 @@
 ]]
 
 
---- Checks if the player has access to this script. Returns a boolean.
-function utilAdminCheck( ply )
-	if ply:IsValid() then
-		-- playerTeam = team.GetName(ply:Team())
-		for key, value in pairs( convarAdminGroups() ) do
-			-- if playerTeam == value then
-			if ply:IsUserGroup(value) then
-				return true
+--- Returns a string array with all known groups.
+function utilGroupsList()
+	local groupsList = {}
+	
+	if false then
+		for key, value in pairs( team.GetAllTeams() ) do
+			if key != 0 and key != 1001 and key != 1002 then
+				table.insert(groupsList, key, value['Name'])
 			end
 		end
-		
-		return false
 	else
-		return true
+		table.insert(groupsList, "superadmin")
+		table.insert(groupsList, "admin")
+		table.insert(groupsList, "user")
 	end
+	
+	return groupsList
 end
 
 
--- --- Checks if the usergroup exists. Returns a boolean.
--- function utilUsergroupExists( usergroup )
-	-- for key, value in pairs( ??? ) do
-		-- if value == usergroup then
-			-- return true
-		-- end
-	-- end
-	-- return false
--- end
-
-
---- Checks if the team exists. Returns a boolean.
-function utilTeamExists( teamName )
-	for key, value in pairs( utilTeamsList() ) do
-		if value['Name'] == teamName then
+--- Checks if the group exists. Returns a boolean.
+function utilGroupExists( input )
+	for key, value in pairs( utilGroupsList() ) do
+		if value == input then
 			return true
 		end
 	end
-	return false
-end
-
-
---- Returns a string array with all known weapon classnames.
-function utilTeamsList()
-	local teamsList = {}
-	for key, value in pairs( team.GetAllTeams() ) do
-		if key != 0 and key != 1001 and key != 1002 then
-			table.insert(teamsList, key, value)
-		end
-	end
 	
-	return teamsList
+	return false
 end
 
 
@@ -111,8 +90,29 @@ function utilWeaponsListSupported()
 end
 
 
+--- Validates if a weapon exists. Returns a boolean.
+function utilWeaponExists( weaponClass )
+	for key, value in pairs( utilWeaponsList() ) do
+		if value == weaponClass then
+			return true
+		end
+	end
+	return false
+end
+
+
+--- Validates if a weapon is supported by WLC. Returns a boolean.
+function utilWeaponSupported( weaponClass )
+	if table.HasValue(utilWeaponsListSupported(), weaponClass) then
+		return true
+	else
+		return false
+	end
+end
+
+
 --- Returns a string array with a list of convars.
-function utilConvarListSupported()
+function utilLimitsListSupported()
 	local convarList = {}
 	table.insert(convarList, "sbox_maxeffects")
 	table.insert(convarList, "sbox_maxnpcs")
@@ -125,8 +125,20 @@ function utilConvarListSupported()
 end
 
 
+--- Validates if a gmod limit exists. Returns a boolean.
+function utilLimitExists( convar )
+	return GetConVar(convar) != nil
+end
+
+
+--- Validates if a gmod limit is supported by WLC. Returns a boolean.
+function utilLimitSupported( convar )
+	return table.HasValue(utilLimitsListSupported(), convar)
+end
+
+
 --- Returns help about all commands or a specific command. Returns a string array.
-function utilHelp( command )
+function utilHelp( ply, command )
 	local returnString = {}
 		
 	if command != nil then
@@ -142,9 +154,13 @@ function utilHelp( command )
 			table.insert(returnString, "No help available yet.")
 		elseif command == "removelimit" then
 			table.insert(returnString, "No help available yet.")
+		elseif ply:IsValid() and command == "gui" then
+			table.insert(returnString, "No help available yet.")
+		elseif not ply:IsValid() and command == "cleardb" then
+			table.insert(returnString, "No help available yet.")
 		else
 			table.insert(returnString, "Invalid command!")
-			table.insert(returnString, "Type wlc help to see a list of all available commands.")
+			table.insert(returnString, "Type 'wlc help' to see a list of all available commands.")
 		end
 	else
 		table.insert(returnString, "\n\rAvailable commands:\n\r")
@@ -172,6 +188,16 @@ function utilHelp( command )
 		table.insert(returnString, "wlc removelimit [group] [[convar]]")
 		table.insert(returnString, "Example: wlc removelimit admin sbox_maxnpcs")
 		table.insert(returnString, "Description: Removes the limit set for the provided convar, or all limits if no convar is specified.\n\r")
+		
+		if ply:IsValid() then
+			table.insert(returnString, "wlc gui")
+			table.insert(returnString, "Example: wlc gui")
+			table.insert(returnString, "Description: Shows the Graphical User Interface.\n\r")
+		else
+			table.insert(returnString, "wlc cleardb")
+			table.insert(returnString, "Example: wlc cleardb")
+			table.insert(returnString, "Description: Removes all restrictions/limits.\n\r")
+		end
 	end
 		
 	return returnString

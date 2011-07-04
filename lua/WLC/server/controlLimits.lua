@@ -1,12 +1,12 @@
 --[[
-	Title: LimitControl
+	Title: ControlLimits
 
 	Holds functions to control the spawn limits.
 ]]
 
 
 --- Checks all limits of a group. Returns a string array.
-function lcCheckLimits( usergroup )
+function limitCheck( usergroup )
 	local returnString = {}
 	limitEntry = sqlSelectLimitEntry(usergroup)
 		
@@ -25,31 +25,14 @@ end
 
 
 --- Gives a group a different limit to a specific gmod limit. Returns a string array.
-function lcSetLimit( usergroup, convar, limit )
+function limitSet( usergroup, convar, limit )
 	local returnString = {}
 	limit = math.floor(limit + 0.5)
-	
-	if utilTeamExists(usergroup) == false then
-		table.insert(returnString, "Error: Usergroup " .. usergroup .. " doesn't exist!")
-		return returnString
-	end
-	
-	if lcGmodLimitExists(convar) == false then
-		table.insert(returnString, "Error: Gmod limit " .. convar .. " doesn't exist!")
-		return returnString
-	end
-	
-	if lcGmodLimitSupported(convar) == false then
-		table.insert(returnString, "Error: Gmod limit " .. convar .. " isn't supported (yet)!")
-		table.insert(returnString, "Currently the following limits are supported:")
-		table.Add(returnString, utilConvarListSupported())
-		return returnString
-	end
 	
 	if sqlWriteLimitEntry(usergroup, convar, limit) then
 		table.insert(returnString, "Changed limit of gmod limit " .. convar .. " to " .. limit .. " on group " .. usergroup .. ".")
 	else
-		table.insert(returnString, "Error: Unhandled error while setting limit!")
+		table.insert(returnString, "Error - Unhandled error while setting limit!")
 	end
 	
 	return returnString
@@ -57,19 +40,14 @@ end
 
 
 --- Removes a gmod limit from a group. Returns a string array.
-function lcRemoveLimit( usergroup, convar )
+function limitRemove( usergroup, convar )
 	local returnString = {}
-	
-	if utilTeamExists(usergroup) == false then
-		table.insert(returnString, "Error: Usergroup " .. usergroup .. " doesn't exist!")
-		return returnString
-	end
 	
 	if sqlSelectLimitEntry(usergroup, convar) == nil then
 		if convar != nil then
-			table.insert(returnString, "Error: Usergroup " .. usergroup .. " doesn't have limit " .. convar .. "!")
+			table.insert(returnString, "Error - Usergroup " .. usergroup .. " doesn't have limit " .. convar .. "!")
 		else				
-			table.insert(returnString, "Error: Usergroup " .. usergroup .. " doesn't have any limits!")
+			table.insert(returnString, "Error - Usergroup " .. usergroup .. " doesn't have any limits!")
 		end
 		return returnString
 	end
@@ -81,29 +59,17 @@ function lcRemoveLimit( usergroup, convar )
 			table.insert(returnString, "Removed limit all limits from group " .. usergroup .. ".")
 		end
 	else
-		table.insert(returnString, "Error: Unhandled error while removing limit!")
+		table.insert(returnString, "Error - Unhandled error while removing limit!")
 	end
 	
 	return returnString
 end
 
 
---- Validates if a gmod limit exists. Returns a boolean.
-function lcGmodLimitExists( convar )
-	return GetConVar(convar) != nil
-end
-
-
---- Validates if a gmod limit is supported by WLC. Returns a boolean.
-function lcGmodLimitSupported( convar )
-	return table.HasValue(utilConvarListSupported(), convar)
-end
-
-
---- Validates if the specified prop is allowed to spawn by the player. Returns a boolean.
-function lcValidateLimit( ply, convar )
+--- Validates if the specified prop is allowed to spawn by the player, using WLC's limits. Returns a boolean.
+function limitValidate( ply, convar )
 	if !convarEnabled() then
-		return lcDefaultValidateLimit( ply, convar )
+		return limitDefault( ply, convar )
 	end
 	
 	entityType = string.sub(convar, 9)
@@ -129,7 +95,7 @@ function lcValidateLimit( ply, convar )
 	end
 	
 	if convarDefaultAction() then
-		return lcDefaultValidateLimit( ply, convar )
+		return limitDefault( ply, convar )
 	else
 		ply:LimitHit(entityType)
 		return false
@@ -138,7 +104,7 @@ end
 
 
 --- Validates if the specified prop is allowed to spawn by the player, using the global convar limit. Returns a boolean.
-function lcDefaultValidateLimit( ply, convar )
+function limitDefault( ply, convar )
 	entityType = string.sub(convar, 9)
 	defaultlimit = server_settings.Int(convar, 0)
 	if ply:GetCount(entityType) < defaultlimit or defaultlimit < 0 then 

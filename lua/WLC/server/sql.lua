@@ -9,95 +9,51 @@
 function sqlValidateTables()
 	local returnString = {}
 
-	if sqlValidateWeaponsTable() then
-		table.insert(returnString, "Table wlc_weapons is valid")
-	else		
-		table.insert(returnString, "Table wlc_weapons is invalid")
-	end
-	
-	if sqlValidateLimitsTable() then
-		table.insert(returnString, "Table wlc_limits is valid")
-	else		
-		table.insert(returnString, "Table wlc_limits is invalid")
-	end
-	
-	return returnString
-end
-
-
---- Returns a string array.
-function sqlCreateTables()
-	local returnString = {}
-	
-	if sqlCreateWeaponsTable() then
-		table.insert(returnString, "Table wlc_weapons created")
-	else		
-		table.insert(returnString, "Table wlc_weapons not created")
-	end
-	
-	if sqlCreateLimitsTable() then
-		table.insert(returnString, "Table wlc_limits created")
-	else		
-		table.insert(returnString, "Table wlc_limits not created")
-	end
-	
-	return returnString
-end
-
-
---- Returns a string array.
-function sqlDeleteTables()
-	local returnString = {}
-	
-	if sqlDeleteWeaponsTable() then
-		table.insert(returnString, "Table wlc_weapons deleted")
-	else		
-		table.insert(returnString, "Table wlc_weapons not deleted")
-	end
-	
-	if sqlDeleteLimitsTable() then
-		table.insert(returnString, "Table wlc_limits deleted")
-	else		
-		table.insert(returnString, "Table wlc_limits not deleted")
-	end
-	
-	return returnString
-end
-
-
---- Returns a boolean.
-function sqlValidateWeaponsTable()
 	if !sql.TableExists("wlc_weapons") then
-		return false
-	end
-	
-	query = "PRAGMA table_info(wlc_weapons);"
-	pragmaResult = sql.Query(query)
-	for key, value in pairs( pragmaResult ) do
-		if value['name'] != "usergroup" and value['name'] != "weapon" then
-			return false
+		if sqlCreateWeaponsTable() then
+			table.insert(returnString, "Table wlc_weapons created")
+		else		
+			table.insert(returnString, "Table wlc_weapons not created")
+		end
+	else
+		query = "PRAGMA table_info(wlc_weapons);"
+		pragmaResult = sql.Query(query)
+		local bool = true
+		for key, value in pairs(pragmaResult) do
+			if value['name'] != "usergroup" and value['name'] != "weapon" then
+				bool = false
+			end
+		end
+		if bool then
+			table.insert(returnString, "Table wlc_weapons is valid")
+		else
+			table.insert(returnString, "Table wlc_weapons is invalid")
 		end
 	end
 	
-	return true
-end
-
-
---- Returns a boolean.
-function sqlValidateLimitsTable()
 	if !sql.TableExists("wlc_limits") then
-		return false
-	end
-	
-	query = "PRAGMA table_info(wlc_limits);"
-	pragmaResult = sql.Query(query)
-	for key, value in pairs( pragmaResult ) do
-		if value['name'] != "usergroup" and value['name'] != "convar" and value['name'] != "maxlimit" then
-			return false
+		if sqlCreateLimitsTable() then
+			table.insert(returnString, "Table wlc_limits created")
+		else		
+			table.insert(returnString, "Table wlc_limits not created")
+		end
+	else	
+		query = "PRAGMA table_info(wlc_limits);"
+		pragmaResult = sql.Query(query)
+		local bool = true
+		for key, value in pairs(pragmaResult) do
+			if value['name'] != "usergroup" and value['name'] != "convar" and value['name'] != "maxlimit" then
+				bool = false
+			end
+		end
+		if bool then
+			table.insert(returnString, "Table wlc_limits is valid")
+		else
+			table.insert(returnString, "Table wlc_limits is invalid")
 		end
 	end
 	
-	return true
+	return returnString
 end
 
 
