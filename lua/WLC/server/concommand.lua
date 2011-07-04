@@ -1,5 +1,5 @@
 --[[
-	Title: Concommand
+	Title: ConCommand
 
 	Holds console commands and their functions.
 ]]
@@ -7,12 +7,15 @@
 
 --- Gets called if an admin typed 'wlc' in the console.
 function concmdWlc( ply, command, args )
-	result = checkInput(ply, command, args)
+	-- Check the input locally.
+	result = inputCheck(ply, command, args)
 	
+	-- Handle the command if the input was valid.
 	if table.Count(result) == 0 then
-		result = handleInput(ply, command, args)
+		result = inputHandle(ply, command, args)
 	end
 	
+	-- Print the check/handling output.
 	if table.Count(result) > 0 then
 		for key, value in pairs( result ) do
 			print(value)
@@ -20,5 +23,6 @@ function concmdWlc( ply, command, args )
 	else
 		print("Error - No output returned.")
 	end
+	Msg("\n")
 end
 concommand.Add( "wlc", concmdWlc )

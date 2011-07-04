@@ -123,7 +123,7 @@ end
 
 
 --- Returns a sql result.
-function sqlSelectWeaponsUsergroups()		
+function sqlSelectWeaponUsergroups()		
 	query = "SELECT usergroup FROM wlc_weapons ORDER BY usergroup DESC;"
 	result = sql.Query(query)	
 	
@@ -132,7 +132,7 @@ end
 
 
 --- Returns a sql result.
-function sqlSelectWeaponsEntry(usergroup, weapon)	
+function sqlSelectWeaponEntry(usergroup, weapon)	
 	if weapon != nil then
 		query = "SELECT * FROM wlc_weapons WHERE usergroup = '" .. usergroup .. "' AND weapon = '" .. weapon .. "';"
 	else
@@ -146,11 +146,11 @@ end
 
 --- Returns a boolean.
 function sqlWriteWeaponsEntry(usergroup, weapon)	
-	if sqlSelectWeaponsEntry(usergroup, weapon) == nil then
+	if sqlSelectWeaponEntry(usergroup, weapon) == nil then
 		query = "INSERT INTO wlc_weapons( usergroup, weapon ) VALUES ( '" .. usergroup .. "', '" .. weapon .. "' );"
 		sql.Query(query)
 		
-		if sqlSelectWeaponsEntry(usergroup, weapon) == nil then
+		if sqlSelectWeaponEntry(usergroup, weapon) == nil then
 			return false
 		else
 			return true
@@ -162,7 +162,7 @@ end
 
 
 --- Returns a boolean.
-function sqlDeleteWeaponsEntry(usergroup, weapon)	
+function sqlDeleteWeaponEntry(usergroup, weapon)	
 	if weapon != nil then
 		query = "DELETE FROM wlc_weapons WHERE usergroup = '" .. usergroup .. "' AND weapon = '" .. weapon .. "';"
 	else
@@ -170,7 +170,7 @@ function sqlDeleteWeaponsEntry(usergroup, weapon)
 	end
 	sql.Query(query)
 	
-	if sqlSelectWeaponsEntry(usergroup, weapon) == nil then
+	if sqlSelectWeaponEntry(usergroup, weapon) == nil then
 		return true
 	else
 		return false

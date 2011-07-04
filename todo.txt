@@ -1,0 +1,7 @@
+Retype a few sentences (see TODO's in files).
+Add spam control.
+Add enable/disable command.
+Add enable/disable buttons to GUI.
+Convert the GUI to a tabbed interface.
+Add some checks and help popups to GUI.
+Test intregration with ULX later on.

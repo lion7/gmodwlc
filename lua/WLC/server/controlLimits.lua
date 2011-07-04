@@ -94,12 +94,7 @@ function limitValidate( ply, convar )
 		end
 	end
 	
-	if convarDefaultAction() then
-		return limitDefault( ply, convar )
-	else
-		ply:LimitHit(entityType)
-		return false
-	end
+	return limitDefault( ply, convar )
 end
 
 

@@ -1,8 +1,8 @@
 "AddonInfo"
 {
 	"name"				"WLC"
-	"version"			"0.5"
-	"up_date"			"2011-07-01"
+	"version"			"0.7"
+	"up_date"			"2011-07-05"
 	"author_name"		"Lion"
 	"author_email"		"lion@leeuwit.nl"
 	"author_url"		"www.leeuwit.nl"

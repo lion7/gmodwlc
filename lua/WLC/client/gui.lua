@@ -14,8 +14,8 @@ function wlcGuiShow( )
 	local dataListView = vgui.Create( "DListView", dermaPanel )
 	local dataListView_Column = dataListView:AddColumn( " " )
 	local limitButton = vgui.Create( "DButton", dermaPanel )
-	local restrictWeaponButton = vgui.Create( "DButton", dermaPanel )
-	local unrestrictWeaponButton = vgui.Create( "DButton", dermaPanel )
+	local addWeaponButton = vgui.Create( "DButton", dermaPanel )
+	local removeWeaponButton = vgui.Create( "DButton", dermaPanel )
 	
 	dermaPanel:SetPos( 50,50 ) -- Position on the players screen
 	dermaPanel:SetSize( 1000, 700 ) -- Size of the frame
@@ -44,16 +44,16 @@ function wlcGuiShow( )
 					RunConsoleCommand( "wlc", "setlimit", value1:GetValue(1), value2:GetValue(1), numSlider:GetValue() )
 				end
 			end
-		elseif restrictWeaponButton:GetDisabled() == true then
+		elseif addWeaponButton:GetDisabled() == true then
 			for key1, value1 in pairs( groupListView:GetSelected() ) do
 				for key2, value2 in pairs( dataListView:GetSelected() ) do
-					RunConsoleCommand( "wlc", "restrictweapon", value1:GetValue(1), value2:GetValue(1) )
+					RunConsoleCommand( "wlc", "addweapon", value1:GetValue(1), value2:GetValue(1) )
 				end
 			end
-		elseif unrestrictWeaponButton:GetDisabled() == true then
+		elseif removeWeaponButton:GetDisabled() == true then
 			for key1, value1 in pairs( groupListView:GetSelected() ) do
 				for key2, value2 in pairs( dataListView:GetSelected() ) do
-					RunConsoleCommand( "wlc", "unrestrictweapon", value1:GetValue(1), value2:GetValue(1) )
+					RunConsoleCommand( "wlc", "removeweapon", value1:GetValue(1), value2:GetValue(1) )
 				end
 			end
 		end
@@ -64,7 +64,7 @@ function wlcGuiShow( )
 	groupListView:SetSize( 475, 500 )
 	groupListView:SetMultiSelect( true )
 	groupListView:AddColumn( "Group(s)" )
-	for key, value in pairs( utilGroupsList() ) do
+	for key, value in pairs( utilGroupList() ) do
 		groupListView:AddLine( value )
 	end
 	groupListView:SetSortable( true )
@@ -103,8 +103,8 @@ function wlcGuiShow( )
 	limitButton:SetText( "Change limit(s)" )
 	limitButton.DoClick = function( button )
 		limitButton:SetDisabled( true )
-		restrictWeaponButton:SetDisabled( false )
-		unrestrictWeaponButton:SetDisabled( false )
+		addWeaponButton:SetDisabled( false )
+		removeWeaponButton:SetDisabled( false )
 		numSlider:SetVisible( false )
 		button:SetDisabled( true )
 		dataListView:Clear()
@@ -115,35 +115,35 @@ function wlcGuiShow( )
 		dataListView:SortByColumn( 1 )
 	end
 	
-	restrictWeaponButton:SetPos( 225, 50 )
-	restrictWeaponButton:SetSize( 175, 30 )
-	restrictWeaponButton:SetText( "Restrict weapon(s)" )
-	restrictWeaponButton.DoClick = function( button )
-		restrictWeaponButton:SetDisabled( true )
+	addWeaponButton:SetPos( 225, 50 )
+	addWeaponButton:SetSize( 175, 30 )
+	addWeaponButton:SetText( "Add weapon(s)" )
+	addWeaponButton.DoClick = function( button )
+		addWeaponButton:SetDisabled( true )
 		limitButton:SetDisabled( false )
-		unrestrictWeaponButton:SetDisabled( false )
+		removeWeaponButton:SetDisabled( false )
 		numSlider:SetVisible( false )
 		button:SetDisabled( true )
 		dataListView:Clear()
 		dataListView_Column:SetName("Weapon(s)")
-		for key, value in pairs( utilWeaponsListSupported() ) do
+		for key, value in pairs( utilWeaponListSupported() ) do
 			dataListView:AddLine( value )
 		end
 		dataListView:SortByColumn( 1 )
 	end
 
-	unrestrictWeaponButton:SetPos( 425, 50 )
-	unrestrictWeaponButton:SetSize( 175, 30 )
-	unrestrictWeaponButton:SetText( "Unrestrict weapon(s)" )
-	unrestrictWeaponButton.DoClick = function( button )
-		unrestrictWeaponButton:SetDisabled( true )
+	removeWeaponButton:SetPos( 425, 50 )
+	removeWeaponButton:SetSize( 175, 30 )
+	removeWeaponButton:SetText( "Remove weapon(s)" )
+	removeWeaponButton.DoClick = function( button )
+		removeWeaponButton:SetDisabled( true )
 		limitButton:SetDisabled( false )
-		restrictWeaponButton:SetDisabled( false )
+		addWeaponButton:SetDisabled( false )
 		numSlider:SetVisible( false )
 		button:SetDisabled( true )
 		dataListView:Clear()
 		dataListView_Column:SetName("Weapon(s)")
-		for key, value in pairs( utilWeaponsListSupported() ) do
+		for key, value in pairs( utilWeaponListSupported() ) do
 			dataListView:AddLine( value )
 		end
 		dataListView:SortByColumn( 1 )

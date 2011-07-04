@@ -5,9 +5,11 @@
 ]]
 
 
-CreateConVar( "wlc_enabled", "1", { FCVAR_REPLICATED, FCVAR_NOTIFY, FCVAR_ARCHIVE } )
-CreateConVar( "wlc_admingroups", "superadmin,admin", { FCVAR_REPLICATED, FCVAR_NOTIFY, FCVAR_ARCHIVE } )
-CreateConVar( "wlc_defaultaction", "1", { FCVAR_NOTIFY, FCVAR_ARCHIVE } )
+CreateConVar( "wlc_enabled", "1", { FCVAR_NOTIFY, FCVAR_ARCHIVE } )
+CreateConVar( "wlc_admingroups", "superadmin,admin", { FCVAR_ARCHIVE } )
+-- 0 means a weapon gets restricted if its listed (blacklist).
+-- 1 means a weapon is allowed to spawn if its listed (whitelist).
+CreateConVar( "wlc_weaponsaction", "0", { FCVAR_NOTIFY, FCVAR_ARCHIVE } )
 
 
 --- Returns a boolean.
@@ -23,6 +25,6 @@ end
 
 
 --- Returns a boolean.
-function convarDefaultAction()
-	return GetConVar("wlc_defaultaction"):GetBool()
+function convarWeaponsAction()
+	return GetConVar("wlc_weaponsaction"):GetBool()
 end
