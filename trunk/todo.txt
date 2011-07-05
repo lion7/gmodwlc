@@ -1,7 +1,10 @@
 Retype a few sentences (see TODO's in files).
-Add spam control.
+Add tool control.
 Add enable/disable command.
 Add enable/disable buttons to GUI.
 Convert the GUI to a tabbed interface.
 Add some checks and help popups to GUI.
 Test intregration with ULX later on.
+limitValidate() and spamValidate() (in controlLimits.lua) got broken during an update.
+
+Optional: Add security checks to the GUI (you can do this by making wlc_admingroups shared and replicated).
