@@ -5,22 +5,6 @@
 ]]
 
 
---- Returns a string array with all wlc subcommands.
-function utilWlcAutoCompleteList()
-	local autoCompleteList = {}
-	
-	table.insert(autoCompleteList, "wlc check")
-	table.insert(autoCompleteList, "wlc addweapon")
-	table.insert(autoCompleteList, "wlc removeweapon")
-	table.insert(autoCompleteList, "wlc setlimit")
-	table.insert(autoCompleteList, "wlc removelimit")
-	table.insert(autoCompleteList, "wlc gui")
-	table.insert(autoCompleteList, "wlc cleardb")
-	
-	return autoCompleteList
-end
-
-
 --- Returns a string array with all known groups.
 function utilGroupList()
 	local groupList = {}

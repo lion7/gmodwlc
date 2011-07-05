@@ -1,0 +1,1 @@
+--[[	Title: ControlTool	Holds functions to allow/disallow tools.]]--- Checks the tool(s) that a group has listed. Returns a string array.function toolCheck( usergroup )end
