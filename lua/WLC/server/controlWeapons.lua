@@ -1,8 +1,18 @@
 --[[
 	Title: ControlWeapons
 	
-	Holds functions to control the weapons.
+	Holds functions to allow/disallow weapons.
 ]]
+
+
+-- The value that should be returned if a weapon is listed.
+-- 0 means a weapon gets restricted (blacklist).
+-- 1 means a weapon is allowed to spawn (whitelist).
+CreateConVar( "wlc_weaponsaction", "0", { FCVAR_NOTIFY, FCVAR_ARCHIVE } )
+--- Returns a boolean.
+function weaponsAction()
+	return GetConVar("wlc_weaponsaction"):GetBool()
+end
 
 
 --- Checks the weapon(s) that a group has listed. Returns a string array.
@@ -71,6 +81,10 @@ end
 
 --- Validates if the specified weapon is allowed for the player's group. Returns a boolean.
 function weaponValidate( ply, weapon )
+	if !utilEnabled() then
+		return true
+	end
+
 	if ply:IsValid() then
 		weaponClass = weapon:GetClass()
 		
@@ -88,11 +102,14 @@ function weaponValidate( ply, weapon )
 		end
 		
 		if weaponsEntry != nil then
-			return convarWeaponsAction()
+			return weaponsAction()
 		else
-			return not convarWeaponsAction()
+			return not weaponsAction()
 		end
 	else
 		return false
 	end
 end
+-- Calls weaponValidate.
+hook.Add( "PlayerCanPickupWeapon", "wlcWeaponPlayerCanPickupWeapon", weaponValidate )
+-- hook.Add( "PlayerGiveSWEP", "wlcWeaponPlayerGiveSWEP", weaponValidate )
